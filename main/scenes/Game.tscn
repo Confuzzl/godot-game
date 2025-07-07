@@ -1,0 +1,36 @@
+[gd_scene load_steps=10 format=3 uid="uid://ddix3ypg3mvbr"]
+
+[ext_resource type="Script" uid="uid://drggreak0qewk" path="res://src/Game.cs" id="1_78awf"]
+[ext_resource type="Texture2D" uid="uid://2l1k8hxv4yqw" path="res://assets/bg/forest.png" id="2_s0nni"]
+[ext_resource type="PackedScene" uid="uid://d0desm2406035" path="res://scenes/GUI.tscn" id="3_aug50"]
+[ext_resource type="PackedScene" uid="uid://dswuydi1pnlkl" path="res://scenes/Machine.tscn" id="4_kiw3p"]
+[ext_resource type="AudioStream" uid="uid://dqx3dnetxipjt" path="res://assets/music/clair de lune.mp3" id="7_g4kob"]
+[ext_resource type="AudioStream" uid="uid://dymrxlbiflmv1" path="res://assets/music/nocturne op15 no2.mp3" id="7_kiw3p"]
+[ext_resource type="AudioStream" uid="uid://dkhrolubv1r28" path="res://assets/music/nocturne op9 no2.mp3" id="8_qy1jj"]
+[ext_resource type="AudioStream" uid="uid://c0ho7br1xw7vw" path="res://assets/music/gymnopedia no1.mp3" id="9_qy1jj"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_3xj3m"]
+streams_count = 4
+stream_0/stream = ExtResource("7_g4kob")
+stream_1/stream = ExtResource("8_qy1jj")
+stream_2/stream = ExtResource("7_kiw3p")
+stream_3/stream = ExtResource("9_qy1jj")
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_78awf")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_3xj3m")
+
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
+offset_right = 960.0
+offset_bottom = 540.0
+texture = ExtResource("2_s0nni")
+expand_mode = 1
+
+[node name="Machine" parent="." instance=ExtResource("4_kiw3p")]
+unique_name_in_owner = true
+
+[node name="GUI" parent="." instance=ExtResource("3_aug50")]
+unique_name_in_owner = true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c11mwngx2glce"
+path="res://.godot/imported/Satie - Gymnopédie No. 1 (Ocarina of Time Soundfont).mp3-0cea700425b19938d1655d558001c009.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Satie - Gymnopédie No. 1 (Ocarina of Time Soundfont).mp3"
+dest_files=["res://.godot/imported/Satie - Gymnopédie No. 1 (Ocarina of Time Soundfont).mp3-0cea700425b19938d1655d558001c009.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

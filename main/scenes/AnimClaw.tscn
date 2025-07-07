@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbqceto7x3ijk"]
+
+[ext_resource type="Script" uid="uid://13ekqssd2dkj" path="res://src/AnimClaw.cs" id="1_7kek5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l8oce"]
+resource_local_to_scene = true
+size = Vector2(80, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bnwv1"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fxea8"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[node name="PhysClaw" type="Node2D"]
+script = ExtResource("1_7kek5")
+
+[node name="Base" type="AnimatableBody2D" parent="."]
+unique_name_in_owner = true
+sync_to_physics = false
+
+[node name="BaseShape" type="CollisionShape2D" parent="Base"]
+unique_name_in_owner = true
+position = Vector2(0, -15.5)
+shape = SubResource("RectangleShape2D_l8oce")
+
+[node name="PivotL" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-30, 0)
+
+[node name="ArmL" type="AnimatableBody2D" parent="PivotL"]
+unique_name_in_owner = true
+sync_to_physics = false
+
+[node name="ArmUpperL" type="CollisionShape2D" parent="PivotL/ArmL"]
+unique_name_in_owner = true
+position = Vector2(-5, 15)
+shape = SubResource("RectangleShape2D_bnwv1")
+
+[node name="ArmLowerL" type="CollisionShape2D" parent="PivotL/ArmL"]
+unique_name_in_owner = true
+position = Vector2(0, 42)
+rotation = -0.392699
+shape = SubResource("RectangleShape2D_fxea8")
+
+[node name="PivotR" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(30, 0)
+
+[node name="ArmR" type="AnimatableBody2D" parent="PivotR"]
+unique_name_in_owner = true
+sync_to_physics = false
+
+[node name="ArmUpperR" type="CollisionShape2D" parent="PivotR/ArmR"]
+unique_name_in_owner = true
+position = Vector2(5, 15)
+shape = SubResource("RectangleShape2D_bnwv1")
+
+[node name="ArmLowerR" type="CollisionShape2D" parent="PivotR/ArmR"]
+unique_name_in_owner = true
+position = Vector2(0, 42)
+rotation = 0.392699
+shape = SubResource("RectangleShape2D_fxea8")

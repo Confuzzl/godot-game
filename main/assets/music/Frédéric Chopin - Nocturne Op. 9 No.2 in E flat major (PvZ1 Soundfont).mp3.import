@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://0krcetqs0erc"
+path="res://.godot/imported/Frédéric Chopin - Nocturne Op. 9 No.2 in E flat major (PvZ1 Soundfont).mp3-89a089a9398844df66e2c16be19ca03f.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Frédéric Chopin - Nocturne Op. 9 No.2 in E flat major (PvZ1 Soundfont).mp3"
+dest_files=["res://.godot/imported/Frédéric Chopin - Nocturne Op. 9 No.2 in E flat major (PvZ1 Soundfont).mp3-89a089a9398844df66e2c16be19ca03f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,98 @@
+[gd_scene load_steps=7 format=3 uid="uid://c7hr455bdv7je"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6kn16"]
+resource_local_to_scene = true
+size = Vector2(80, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p6ilv"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_0gyoo"]
+resource_local_to_scene = true
+points = PackedVector2Array(-5, -15, 5, -15, 5, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l13ju"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_6kn16"]
+resource_local_to_scene = true
+points = PackedVector2Array(5, -15, -5, -15, -5, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0gyoo"]
+resource_local_to_scene = true
+size = Vector2(70, 10)
+
+[node name="PhysClaw2" type="Node2D"]
+
+[node name="Base" type="AnimatableBody2D" parent="."]
+unique_name_in_owner = true
+sync_to_physics = false
+
+[node name="BaseShape" type="CollisionShape2D" parent="Base"]
+unique_name_in_owner = true
+position = Vector2(0, -15)
+shape = SubResource("RectangleShape2D_6kn16")
+
+[node name="JointL" type="PinJoint2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-35, 0)
+node_a = NodePath("../Base")
+node_b = NodePath("../ArmL")
+bias = 0.9
+angular_limit_enabled = true
+angular_limit_lower = -0.523599
+angular_limit_upper = 0.523599
+
+[node name="ArmL" type="RigidBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-30, 0)
+
+[node name="ArmUpperL" type="CollisionShape2D" parent="ArmL"]
+unique_name_in_owner = true
+position = Vector2(-5, 15)
+shape = SubResource("RectangleShape2D_p6ilv")
+
+[node name="ArmLowerL" type="CollisionShape2D" parent="ArmL"]
+unique_name_in_owner = true
+position = Vector2(0, 42)
+rotation = -0.392699
+shape = SubResource("ConvexPolygonShape2D_0gyoo")
+
+[node name="JointR" type="PinJoint2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(35, 0)
+node_a = NodePath("../Base")
+node_b = NodePath("../ArmR")
+bias = 0.9
+angular_limit_enabled = true
+angular_limit_lower = -0.523599
+angular_limit_upper = 0.523599
+
+[node name="ArmR" type="RigidBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(30, 0)
+
+[node name="ArmUpperR" type="CollisionShape2D" parent="ArmR"]
+unique_name_in_owner = true
+position = Vector2(5, 15)
+shape = SubResource("RectangleShape2D_l13ju")
+
+[node name="ArmLowerR" type="CollisionShape2D" parent="ArmR"]
+unique_name_in_owner = true
+position = Vector2(0, 42)
+rotation = 0.392699
+shape = SubResource("ConvexPolygonShape2D_6kn16")
+
+[node name="CapsuleCheckM" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CapsuleCheckM"]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_0gyoo")
+debug_color = Color(0.992995, 0.0779046, 9.62615e-07, 0.42)
+
+[node name="GrabTimer" type="Timer" parent="."]
+unique_name_in_owner = true

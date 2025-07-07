@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3h4rcdijc025"]
+
+[ext_resource type="Script" uid="uid://cojhcsy1ykt1t" path="res://src/Restocker.cs" id="1_flwxw"]
+
+[node name="Restocker" type="Node"]
+script = ExtResource("1_flwxw")

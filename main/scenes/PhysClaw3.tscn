@@ -1,0 +1,135 @@
+[gd_scene load_steps=12 format=3 uid="uid://cnktdtsyyc0mh"]
+
+[ext_resource type="Script" uid="uid://dv11pgmdvtnm6" path="res://src/PhysClaw.cs" id="1_rvepl"]
+[ext_resource type="Texture2D" uid="uid://by8h57hjlx6pk" path="res://assets/machine/claw_arm.png" id="2_1wwmj"]
+[ext_resource type="Texture2D" uid="uid://dw6nrplbl1ej" path="res://assets/machine/claw_base2.png" id="2_xnm2r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6kn16"]
+resource_local_to_scene = true
+size = Vector2(80, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p6ilv"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rvepl"]
+size = Vector2(10, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1wwmj"]
+size = Vector2(15, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l13ju"]
+resource_local_to_scene = true
+size = Vector2(10, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xnm2r"]
+size = Vector2(10, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aqns8"]
+size = Vector2(15, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0gyoo"]
+resource_local_to_scene = true
+size = Vector2(70, 15)
+
+[node name="PhysClaw3" type="Node2D"]
+script = ExtResource("1_rvepl")
+
+[node name="Base" type="AnimatableBody2D" parent="."]
+unique_name_in_owner = true
+sync_to_physics = false
+
+[node name="BaseShape" type="CollisionShape2D" parent="Base"]
+position = Vector2(0, -15)
+shape = SubResource("RectangleShape2D_6kn16")
+
+[node name="TextureRect" type="TextureRect" parent="Base"]
+offset_left = -42.0
+offset_top = -30.0
+offset_right = 42.0
+texture = ExtResource("2_xnm2r")
+
+[node name="JointL" type="PinJoint2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-35, 0)
+node_a = NodePath("../Base")
+node_b = NodePath("../ArmL")
+bias = 0.9
+
+[node name="ArmL" type="RigidBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-30, 0)
+angular_damp = 60.0
+
+[node name="ArmUpperL" type="CollisionShape2D" parent="ArmL"]
+position = Vector2(-5, 15)
+shape = SubResource("RectangleShape2D_p6ilv")
+
+[node name="ArmLowerL" type="CollisionShape2D" parent="ArmL"]
+position = Vector2(0, 42)
+rotation = -0.392699
+shape = SubResource("RectangleShape2D_rvepl")
+
+[node name="ArmLowerL2" type="CollisionShape2D" parent="ArmL"]
+position = Vector2(10, 55)
+shape = SubResource("RectangleShape2D_1wwmj")
+
+[node name="TextureRect" type="TextureRect" parent="ArmL"]
+offset_left = -10.0
+offset_right = 15.0
+offset_bottom = 55.0
+scale = Vector2(1.17644, 1.09929)
+texture = ExtResource("2_1wwmj")
+
+[node name="JointR" type="PinJoint2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(35, 0)
+node_a = NodePath("../Base")
+node_b = NodePath("../ArmR")
+bias = 0.9
+
+[node name="ArmR" type="RigidBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(30, 0)
+angular_damp = 60.0
+
+[node name="ArmUpperR" type="CollisionShape2D" parent="ArmR"]
+position = Vector2(5, 15)
+shape = SubResource("RectangleShape2D_l13ju")
+
+[node name="ArmLowerR" type="CollisionShape2D" parent="ArmR"]
+position = Vector2(0, 42)
+rotation = 0.392699
+shape = SubResource("RectangleShape2D_xnm2r")
+
+[node name="ArmLowerR2" type="CollisionShape2D" parent="ArmR"]
+position = Vector2(-10, 55)
+shape = SubResource("RectangleShape2D_aqns8")
+
+[node name="TextureRect2" type="TextureRect" parent="ArmR"]
+offset_left = -19.0
+offset_right = 6.0
+offset_bottom = 55.0
+scale = Vector2(1.17644, 1.09929)
+texture = ExtResource("2_1wwmj")
+flip_h = true
+
+[node name="DeepCapsuleCheck" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Shape" type="CollisionShape2D" parent="DeepCapsuleCheck"]
+unique_name_in_owner = true
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_0gyoo")
+debug_color = Color(0.992995, 0.0779046, 9.62615e-07, 0.42)
+
+[node name="GrabTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="DepositTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = -40.0
+offset_top = -30.0
+offset_right = 40.0

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://fvj3navd3vig"
+path="res://.godot/imported/Beethoven - Piano Sonata No. 14 Moonlight, Movement 1 (Majora's Mask Soundfont).mp3-9fae804f437043ba6d058e9d0beffd7b.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Beethoven - Piano Sonata No. 14 Moonlight, Movement 1 (Majora's Mask Soundfont).mp3"
+dest_files=["res://.godot/imported/Beethoven - Piano Sonata No. 14 Moonlight, Movement 1 (Majora's Mask Soundfont).mp3-9fae804f437043ba6d058e9d0beffd7b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

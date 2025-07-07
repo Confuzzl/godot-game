@@ -1,0 +1,1 @@
+ffmpeg -i %1 -codec:a libmp3lame -b:a %3 %2

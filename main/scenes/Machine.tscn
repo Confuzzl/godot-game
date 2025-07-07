@@ -1,0 +1,143 @@
+[gd_scene load_steps=14 format=3 uid="uid://dswuydi1pnlkl"]
+
+[ext_resource type="Script" uid="uid://cqjgrlghy3m67" path="res://src/Machine.cs" id="1_603am"]
+[ext_resource type="Texture2D" uid="uid://dxs7r1tl65eun" path="res://assets/machine/machine_front2.png" id="2_84r80"]
+[ext_resource type="PackedScene" uid="uid://ciwra63njxjht" path="res://scenes/WorldBound.tscn" id="3_gbunh"]
+[ext_resource type="PackedScene" uid="uid://vwwq6sp0mma1" path="res://scenes/Wall.tscn" id="4_gbunh"]
+[ext_resource type="PackedScene" uid="uid://c3h4rcdijc025" path="res://scenes/Restocker.tscn" id="6_ljjt8"]
+[ext_resource type="PackedScene" uid="uid://cnktdtsyyc0mh" path="res://scenes/PhysClaw3.tscn" id="7_3ibjd"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_3ibjd"]
+resource_local_to_scene = true
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gi5es"]
+resource_local_to_scene = true
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_b7q23"]
+resource_local_to_scene = true
+normal = Vector2(-1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_p3t3n"]
+resource_local_to_scene = true
+normal = Vector2(0, 1)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_84r80"]
+resource_local_to_scene = true
+b = Vector2(0, -240)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_84r80"]
+size = Vector2(100, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ljjt8"]
+size = Vector2(360, 120)
+
+[node name="Machine" type="Node2D"]
+script = ExtResource("1_603am")
+
+[node name="Front" type="TextureRect" parent="."]
+unique_name_in_owner = true
+z_index = 1
+offset_left = -180.0
+offset_top = -60.0
+offset_right = 300.0
+texture = ExtResource("2_84r80")
+
+[node name="Background" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -180.0
+offset_top = -480.0
+offset_right = 300.0
+offset_bottom = -60.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.498039)
+
+[node name="WorldB" parent="." instance=ExtResource("3_gbunh")]
+unique_name_in_owner = true
+position = Vector2(0, -60)
+
+[node name="Shape" parent="WorldB" index="0"]
+shape = SubResource("WorldBoundaryShape2D_3ibjd")
+
+[node name="WorldL" parent="." instance=ExtResource("3_gbunh")]
+unique_name_in_owner = true
+position = Vector2(-180, -120)
+
+[node name="Shape" parent="WorldL" index="0"]
+shape = SubResource("WorldBoundaryShape2D_gi5es")
+
+[node name="WorldR" parent="." instance=ExtResource("3_gbunh")]
+unique_name_in_owner = true
+position = Vector2(300, -120)
+
+[node name="Shape" parent="WorldR" index="0"]
+shape = SubResource("WorldBoundaryShape2D_b7q23")
+
+[node name="WorldT" parent="." instance=ExtResource("3_gbunh")]
+unique_name_in_owner = true
+position = Vector2(0, -480)
+
+[node name="Shape" parent="WorldT" index="0"]
+shape = SubResource("WorldBoundaryShape2D_p3t3n")
+
+[node name="ChuteSeparator" parent="." instance=ExtResource("4_gbunh")]
+unique_name_in_owner = true
+position = Vector2(180, -60)
+
+[node name="Shape" parent="ChuteSeparator" index="0"]
+shape = SubResource("SegmentShape2D_84r80")
+
+[node name="StartButton" type="Button" parent="."]
+unique_name_in_owner = true
+z_index = 1
+offset_left = 210.0
+offset_top = -60.0
+offset_right = 270.0
+focus_mode = 0
+text = "Start"
+
+[node name="EndButton" type="Button" parent="."]
+unique_name_in_owner = true
+z_index = 1
+offset_left = 90.0
+offset_top = -60.0
+offset_right = 150.0
+focus_mode = 0
+text = "End"
+
+[node name="ShuffleButton" type="Button" parent="."]
+unique_name_in_owner = true
+z_index = 1
+offset_left = -30.0
+offset_top = -60.0
+offset_right = 30.0
+focus_mode = 0
+text = "Shuff"
+
+[node name="PhysClaw" parent="." instance=ExtResource("7_3ibjd")]
+unique_name_in_owner = true
+position = Vector2(0, -420)
+
+[node name="ChuteCheck" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(240, -60)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChuteCheck"]
+shape = SubResource("RectangleShape2D_84r80")
+
+[node name="MergeCheck" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MergeCheck"]
+shape = SubResource("RectangleShape2D_ljjt8")
+debug_color = Color(0, 0.701961, 0.0784314, 0.129412)
+
+[node name="Restocker" parent="." instance=ExtResource("6_ljjt8")]
+unique_name_in_owner = true
+
+[editable path="WorldB"]
+[editable path="WorldL"]
+[editable path="WorldR"]
+[editable path="WorldT"]
+[editable path="ChuteSeparator"]

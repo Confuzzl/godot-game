@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c0ho7br1xw7vw"
+path="res://.godot/imported/gymnopedia no1.mp3-25b009e98d17319bedcbe05018bce56e.mp3str"
+
+[deps]
+
+source_file="res://assets/music/gymnopedia no1.mp3"
+dest_files=["res://.godot/imported/gymnopedia no1.mp3-25b009e98d17319bedcbe05018bce56e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bpc0uci7euokf"
+path="res://.godot/imported/Chopin - Nocturne Op. 15, No. 2 in F major (Fire Emblem Soundfont).mp3-994cca6509095375b2504d67ee044264.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Chopin - Nocturne Op. 15, No. 2 in F major (Fire Emblem Soundfont).mp3"
+dest_files=["res://.godot/imported/Chopin - Nocturne Op. 15, No. 2 in F major (Fire Emblem Soundfont).mp3-994cca6509095375b2504d67ee044264.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
