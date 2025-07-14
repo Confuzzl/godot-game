@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://ddix3ypg3mvbr" path="res://scenes/Game.tscn" id="1_elqb8"]
 
 [node name="Main" type="Node2D"]
+process_mode = 3
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

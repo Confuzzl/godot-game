@@ -37,7 +37,7 @@ public partial class Machine : Node2D
 		{
 			if (node is Capsule cap)
 			{
-				Game.INSTANCE.ConsumeCapsule(cap);
+				Game.INSTANCE.Score += cap.Value;
 				cap.CollisionMask = 0;
 				capsules.Remove(cap.ID);
 			}

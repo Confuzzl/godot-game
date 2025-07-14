@@ -7,10 +7,9 @@ using System.Numerics;
 
 namespace Matcha;
 
-//[Generator.Attributes.Test]
-//public partial class Test { }
 
 
+#region Util
 public static class Util
 {
 	public static string ToCompactString(dynamic n)
@@ -50,10 +49,13 @@ public static class Util
 
 	public static Texture2D GetTexture(string name) => ResourceLoader.Load<Texture2D>($"res://assets/{name}");
 }
-
+#endregion
 public partial class Game : Node2D
 {
 	public const float UNIT = 60;
+
+	private static Game instance;
+	public static Game INSTANCE { get => instance; }
 
 	#region Collision Flags
 	public const uint WORLD_LAYER = 1 << 0;
@@ -61,22 +63,20 @@ public partial class Game : Node2D
 	public const uint CLAW_LAYER = 1 << 2;
 	#endregion
 
-	private static Game instance;
-	public static Game INSTANCE { get => instance; }
-
+	#region Ball
 	public uint NumWaves { get; private set; } = 2;
 	public uint NumBallsInWave { get; private set; } = 7;
 	public uint NumBallsPerSubWave { get; private set; } = 7;
 	public BigInteger BallValue = 1;
-
-	private const double TOTAL_CLEAR_MULTIPLIER = 3;
+	#endregion
 
 	#region Score
+	private const double TOTAL_CLEAR_MULTIPLIER = 3;
 	public BigInteger TotalScore { get; private set; } = 0;
 	public BigInteger Score
 	{
 		get;
-		private set
+		set
 		{
 			field = value;
 			scoreBar.GetNode<Label>("%RoundScore").Text = Util.ToCompactString(value);
@@ -93,6 +93,7 @@ public partial class Game : Node2D
 		}
 	}
 	public BigInteger TotalRoundValue { get; private set; } = 0;
+	private ScoreBar scoreBar;
 	#endregion
 
 	public uint Round
@@ -127,9 +128,10 @@ public partial class Game : Node2D
 		}
 	}
 
-	public Machine Machine { get; private set; }
+	[Export] public Machine Machine { get; private set; }
+	[Export] public Gui Gui { get; private set; }
+	[Export] public AudioStreamPlayer Music { get; private set; }
 
-	private ScoreBar scoreBar;
 
 	public Game()
 	{
@@ -141,7 +143,8 @@ public partial class Game : Node2D
 		// GD.Print(BigInteger.Parse("1,000", NumberStyles.AllowThousands));
 	}
 
-	public void ConsumeCapsule(Capsule cap) { Score += cap.Value; }
+	//public void ConsumeCapsule(Capsule cap) { Score += cap.Value; }
+	public Godot.Vector2 MousePosition() => GetViewport().GetMousePosition();
 
 	private void ResetRound()
 	{
@@ -170,8 +173,10 @@ public partial class Game : Node2D
 
 	public override void _Ready()
 	{
-		Machine = GetNode<Machine>("%Machine");
-		scoreBar = GetNode<ScoreBar>("%GUI/%ScoreBar");
+		scoreBar = Gui.GetNode<ScoreBar>("%ScoreBar");
+
+		Gui.Settings.Music.Value = 0;
+
 
 		Round = 0;
 		Tickets = 0;
@@ -202,7 +207,7 @@ public partial class Game : Node2D
 		};
 	}
 
-	public override void _Input(InputEvent @event)
+	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton me)
 		{
@@ -218,7 +223,13 @@ public partial class Game : Node2D
 			switch (ke.Keycode)
 			{
 				case Key.Escape:
-					GetTree().Quit();
+					if (Gui.ActiveWindow is null)
+						GetTree().Quit();
+					else
+					{
+						GetTree().Paused = false;
+						Gui.CloseWindow();
+					}
 					break;
 				case Key.Space:
 					if (Tokens > 0 && Machine.SendIt()) Tokens -= 1;

@@ -13,14 +13,14 @@ public partial class Machine : Node2D
 	partial void ReadyCapsule();
 	partial void ReadyState();
 
-	public PhysClaw Claw { get; private set; }
+	[Export] public PhysClaw Claw { get; private set; }
 
 	public override void _Ready()
 	{
 		(var x, var y) = GetViewportRect().Size;
 		Position = new(x / 2, y);
 
-		Claw = GetNode<PhysClaw>("%PhysClaw");
+		//Claw = GetNode<PhysClaw>("%PhysClaw");
 
 		var front = GetNode<TextureRect>("%Front");
 		front.Size = new(WIDTH, FRONT_HEIGHT);

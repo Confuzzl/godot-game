@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://cnktdtsyyc0mh"]
 
-[ext_resource type="Script" uid="uid://dv11pgmdvtnm6" path="res://src/PhysClaw.cs" id="1_rvepl"]
+[ext_resource type="Script" uid="uid://dv11pgmdvtnm6" path="res://src/machine/PhysClaw.cs" id="1_rvepl"]
 [ext_resource type="Texture2D" uid="uid://by8h57hjlx6pk" path="res://assets/machine/claw_arm.png" id="2_1wwmj"]
 [ext_resource type="Texture2D" uid="uid://dw6nrplbl1ej" path="res://assets/machine/claw_base2.png" id="2_xnm2r"]
 
@@ -32,8 +32,16 @@ size = Vector2(15, 10)
 resource_local_to_scene = true
 size = Vector2(70, 15)
 
-[node name="PhysClaw3" type="Node2D"]
+[node name="PhysClaw3" type="Node2D" node_paths=PackedStringArray("base", "jointL", "jointR", "armL", "armR", "deepCheck", "grabTimer", "depositTimer")]
 script = ExtResource("1_rvepl")
+base = NodePath("Base")
+jointL = NodePath("JointL")
+jointR = NodePath("JointR")
+armL = NodePath("ArmL")
+armR = NodePath("ArmR")
+deepCheck = NodePath("DeepCapsuleCheck")
+grabTimer = NodePath("GrabTimer")
+depositTimer = NodePath("DepositTimer")
 
 [node name="Base" type="AnimatableBody2D" parent="."]
 unique_name_in_owner = true

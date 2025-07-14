@@ -13,11 +13,12 @@ public partial class PhysClaw : Node2D
 	private const float INNER_ANGLE = 15;
 	private const float OUTER_ANGLE = 45;
 
-	private AnimatableBody2D @base;
-	private PinJoint2D jointL, jointR;
-	private RigidBody2D armL, armR;
 
-	private Area2D deepCheck;
+	[Export] private AnimatableBody2D @base;
+	[Export] private PinJoint2D jointL, jointR;
+	[Export] private RigidBody2D armL, armR;
+
+	[Export] private Area2D deepCheck;
 
 	public bool Awake { get; set; }
 
@@ -53,17 +54,11 @@ public partial class PhysClaw : Node2D
 	} = State.PACING_RIGHT;
 
 	private float speed = 200;
-	private Timer grabTimer, depositTimer;
+	[Export] private Timer grabTimer, depositTimer;
 
 	public override void _Ready()
 	{
 		Position = new(TRACK_START, -START_HEIGHT);
-
-		@base = GetNode<AnimatableBody2D>("%Base");
-		jointL = GetNode<PinJoint2D>("%JointL");
-		jointR = GetNode<PinJoint2D>("%JointR");
-		armL = GetNode<RigidBody2D>("%ArmL");
-		armR = GetNode<RigidBody2D>("%ArmR");
 
 		armL.Mass = 10;
 		armR.Mass = 10;
@@ -82,15 +77,10 @@ public partial class PhysClaw : Node2D
 		jointR.AngularLimitLower = Mathf.DegToRad(-OUTER_ANGLE);
 		jointR.AngularLimitUpper = Mathf.DegToRad(+INNER_ANGLE);
 
-
-		deepCheck = GetNode<Area2D>("%DeepCapsuleCheck");
-
-		grabTimer = GetNode<Timer>("%GrabTimer");
 		grabTimer.OneShot = true;
 		grabTimer.WaitTime = 2;
 		grabTimer.Timeout += () => { MyState = State.UP_VERTICAL; };
 
-		depositTimer = GetNode<Timer>("%DepositTimer");
 		depositTimer.OneShot = true;
 		depositTimer.WaitTime = 1;
 		depositTimer.Timeout += () =>
@@ -197,7 +187,10 @@ public partial class PhysClaw : Node2D
 			foreach (var timer in Triggers.TIMERS)
 			{
 				if ((timer.TimeSinceLastTriggered += delta) > timer.Interval)
+				{
+					timer.TimeSinceLastTriggered = 0;
 					timer.Trigger();
+				}
 			}
 
 

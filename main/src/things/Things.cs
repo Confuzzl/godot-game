@@ -1,0 +1,68 @@
+using Godot;
+//using Matcha.Generator.Attributes;
+using System;
+using System.Collections.Immutable;
+using System.Diagnostics;
+
+namespace Matcha.Things;
+
+using Generator.Attributes.Thing;
+
+
+public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
+{
+
+	public Texture2D Texture { get; init; } = texture;
+	public ThingSlotBase? Slot { get; set; }
+	public bool Active
+	{
+		get;
+		set
+		{
+			field = value;
+			if (value) triggerBase?.Things.Add(this);
+			else triggerBase?.Things.Remove(this);
+		}
+	}
+	public bool Upgraded { get; set; }
+
+	public string TooltipName { get; init; }
+	public string Description { get; init; }
+
+
+	protected Triggers.Base triggerBase = triggerBase;
+
+	public void Trigger()
+	{
+		Debug.Assert(Active && Slot is not null, "Thing triggered when inactive or null slot");
+		//GD.Print($"activating {Slot?.Index}");
+		Slot.Trigger();
+		TriggerImpl();
+	}
+
+	protected virtual ImmutableArray<Vector2> TriggerTargets() => [];
+	protected virtual void TriggerImpl() { }
+}
+
+[BaseType]
+public abstract partial class Character(string name, Triggers.Base triggerBase) : Thing(Util.GetTexture($"characters/{name}.png"), triggerBase)
+{
+
+	[ResourceName("chiikawa2"), TooltipName("evil!"), TriggeredBy<Triggers.OnRestock>]
+	public partial class Chiikawa { protected override void TriggerImpl() { GD.Print("CHIIKAWA!"); } }
+
+	[TriggeredBy<Triggers.EveryHalfSecond>]
+	public partial class Hachiware;
+
+	//[TriggeredBy<Triggers.OnMerge>]
+	public partial class Usagi;
+}
+
+[BaseType]
+public partial class Item(string name, Triggers.Base triggerBase) : Thing(Util.GetTexture($"items/{name}.png"), triggerBase)
+{
+	//[TriggeredBy<Triggers.OnPassRoundGoal>]
+	public partial class Matcha;
+	//[TriggeredBy<Triggers.OnRestock>]
+	public partial class Boba;
+}

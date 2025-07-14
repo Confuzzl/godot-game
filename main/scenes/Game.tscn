@@ -16,11 +16,17 @@ stream_1/stream = ExtResource("8_qy1jj")
 stream_2/stream = ExtResource("7_kiw3p")
 stream_3/stream = ExtResource("9_qy1jj")
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" node_paths=PackedStringArray("Machine", "Gui", "Music")]
+process_mode = 3
 script = ExtResource("1_78awf")
+Machine = NodePath("Machine")
+Gui = NodePath("GUI")
+Music = NodePath("Music")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
 stream = SubResource("AudioStreamRandomizer_3xj3m")
+autoplay = true
 
 [node name="Background" type="TextureRect" parent="."]
 unique_name_in_owner = true
@@ -34,3 +40,5 @@ unique_name_in_owner = true
 
 [node name="GUI" parent="." instance=ExtResource("3_aug50")]
 unique_name_in_owner = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

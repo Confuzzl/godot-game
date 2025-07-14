@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Matcha.Generator.Attributes;
+namespace Matcha.Generator.Attributes
+{
+    namespace Thing
+    {
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class BaseType : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class ResourceName(string _) : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class TooltipName(string _) : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class TooltipDescription(string _) : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class TriggeredBy<T> : Attribute { }
+    }
 
-[AttributeUsage(AttributeTargets.Class)]
-public class ResourceNameAttribute(string _) : Attribute { }
-[AttributeUsage(AttributeTargets.Class)]
-public class ThingTypeAttribute : Attribute { }
+    namespace Trigger
+    {
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Container : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Timed : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class TooltipName(string _) : Attribute { }
+    }
+}
 
-[AttributeUsage(AttributeTargets.Class)]
-public class TriggerContainerAttribute : Attribute { }
-[AttributeUsage(AttributeTargets.Class)]
-public class TimedTriggerAttribute : Attribute { }
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class TriggeredByAttribute<T> : Attribute { }
+

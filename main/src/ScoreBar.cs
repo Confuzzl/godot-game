@@ -12,17 +12,17 @@ public partial class ScoreBar : TextureProgressBar
 		new("#e51f1f"),
 	];
 
-	private static readonly int RANDOM_OFFSET = Random.Shared.Next();
+	private static readonly uint RANDOM_OFFSET = (uint)Random.Shared.Next();
 
-	private static Color RandomColor(int n)
+	private static Color RandomColor(uint n)
 	{
-		Random COLOR_GEN = new(RANDOM_OFFSET + n);
+		Random COLOR_GEN = new((int)(RANDOM_OFFSET + n));
 		return new(COLOR_GEN.NextSingle(), COLOR_GEN.NextSingle(), COLOR_GEN.NextSingle());
 	}
 
-	private static Color FullColor(int n)
+	private static Color FullColor(uint n)
 	{
-		if (n < 0)
+		if (n == uint.MaxValue)
 			return Colors.White;
 		if (n < COLORS.Length)
 			return COLORS[n];
@@ -40,15 +40,15 @@ public partial class ScoreBar : TextureProgressBar
 
 	public void Set(double proportion)
 	{
-		var currFull = (int)proportion;
+		var currFull = (uint)proportion;
 		var frac = proportion % 1;
 
 		Value = frac;
 
-		TintUnder = FullColor(currFull - 1);
+		TintUnder = FullColor(unchecked(currFull - 1));
 		TintProgress = FullColor(currFull);
 
-		Multiplier = (uint)Math.Min(MAX_MULTIPLIER, currFull);
+		Multiplier = Math.Min(MAX_MULTIPLIER, currFull);
 
 		multiplierLabel.Text = Multiplier == 0 ? "" : $"{Multiplier}x";
 	}

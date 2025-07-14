@@ -6,14 +6,29 @@ using System.Linq;
 using System.Text;
 
 namespace Matcha.Generator;
-public static class GeneratorUtil
+public static class Util
 {
+    //public static bool DerivesFrom<T>(INamedTypeSymbol? symbol)
+    //{
+    //    if (symbol is null) return false;
+    //    if (symbol.ToDisplayString() == typeof(T).FullName) return true;
+    //    return DerivesFrom<T>(symbol.BaseType);
+    //}
+
+
     public static bool HasAttribute<T>(INamedTypeSymbol symbol)
     {
         foreach (var attr in symbol.GetAttributes())
             if (attr.AttributeClass!.ToDisplayString() == typeof(T).FullName)
                 return true;
         return false;
+    }
+    public static AttributeData? GetAttribute<T>(INamedTypeSymbol symbol)
+    {
+        foreach (var attr in symbol.GetAttributes())
+            if (attr.AttributeClass!.ToDisplayString() == typeof(T).FullName)
+                return attr;
+        return null;
     }
     public static string CapsUnderscore(string str) => string.Concat(str.Select(
                 (x, i) => ((i > 0 && char.IsUpper(x)) ? "_" : "") + x.ToString().ToUpperInvariant()));

@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://dswuydi1pnlkl"]
 
-[ext_resource type="Script" uid="uid://cqjgrlghy3m67" path="res://src/Machine.cs" id="1_603am"]
+[ext_resource type="Script" uid="uid://cqjgrlghy3m67" path="res://src/machine/Machine.cs" id="1_603am"]
 [ext_resource type="Texture2D" uid="uid://dxs7r1tl65eun" path="res://assets/machine/machine_front2.png" id="2_84r80"]
 [ext_resource type="PackedScene" uid="uid://ciwra63njxjht" path="res://scenes/WorldBound.tscn" id="3_gbunh"]
 [ext_resource type="PackedScene" uid="uid://vwwq6sp0mma1" path="res://scenes/Wall.tscn" id="4_gbunh"]
@@ -32,8 +32,10 @@ size = Vector2(100, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ljjt8"]
 size = Vector2(360, 120)
 
-[node name="Machine" type="Node2D"]
+[node name="Machine" type="Node2D" node_paths=PackedStringArray("Claw")]
+process_mode = 1
 script = ExtResource("1_603am")
+Claw = NodePath("PhysClaw")
 
 [node name="Front" type="TextureRect" parent="."]
 unique_name_in_owner = true

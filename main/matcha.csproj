@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>preview</LangVersion>
+    <RootNamespace>Matcha</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\generator\generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

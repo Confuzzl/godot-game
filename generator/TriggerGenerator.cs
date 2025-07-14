@@ -1,14 +1,12 @@
-﻿using Matcha.Generator.Attributes;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Matcha.Generator;
 
+using Trigger = Attributes.Trigger;
 
 
 [Generator]
@@ -17,7 +15,7 @@ public sealed class TriggerGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         {
-            var provider = GeneratorUtil.ClassesWithAttribute<TriggerContainerAttribute>(context);
+            var provider = Util.ClassesWithAttribute<Trigger::Container>(context);
             context.RegisterSourceOutput(provider, ExecuteTriggerClasses);
 
         }
@@ -42,9 +40,9 @@ public sealed class TriggerGenerator : IIncrementalGenerator
             if (nestedClass.IsAbstract) continue;
 
             string nestedKlassName = nestedClass.Name;
-            string caps = GeneratorUtil.CapsUnderscore(nestedKlassName);
+            string caps = Util.CapsUnderscore(nestedKlassName);
             builder.AppendLine($"\tpublic static readonly {nestedKlassName} {caps} = new();");
-            if (GeneratorUtil.HasAttribute<TimedTriggerAttribute>(nestedClass.BaseType!))
+            if (Util.HasAttribute<Trigger::Timed>(nestedClass.BaseType!))
             {
                 timers.Add(caps);
             }

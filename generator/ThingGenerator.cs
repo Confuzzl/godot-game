@@ -2,17 +2,19 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+using System.Linq;
 using System.Text;
 
 namespace Matcha.Generator;
+
+using Thing = Attributes.Thing;
 
 [Generator]
 public sealed class ThingGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = GeneratorUtil.ClassesWithAttribute<ThingTypeAttribute>(context);
+        var provider = Util.ClassesWithAttribute<Thing::BaseType>(context);
 
         context.RegisterSourceOutput(provider, Execute);
     }
@@ -22,31 +24,46 @@ public sealed class ThingGenerator : IIncrementalGenerator
         var klassSyntax = (ClassDeclarationSyntax)syntax.Node;
         string containerName = klassSyntax.Identifier.ToString();
 
-
         StringBuilder builder = new();
         builder.AppendLine($$"""
             namespace Matcha.Things;
             public partial class {{containerName}}
             {
             """);
-        foreach (INamedTypeSymbol nestedClass in syntax.SemanticModel.GetDeclaredSymbol(klassSyntax)!.GetTypeMembers())
+        foreach (INamedTypeSymbol thing in syntax.SemanticModel.GetDeclaredSymbol(klassSyntax)!.GetTypeMembers())
         {
-            string nestedKlassName = nestedClass.Name;
-            string textureName = nestedKlassName.ToLower();
+            string thingName = thing.Name;
+            string textureName = thingName.ToLower();
+            string tooltip = string.Concat(thingName.Select(
+                (x, i) => ((i > 0 && char.IsUpper(x)) ? " " : "") + x.ToString()));
+            string description = "";
             ITypeSymbol? trigger = null;
 
-            foreach (AttributeData attr in nestedClass.GetAttributes())
+            foreach (AttributeData attr in thing.GetAttributes())
             {
-                if (attr.AttributeClass!.ToDisplayString() == typeof(ResourceNameAttribute).FullName)
+                string fullname = attr.AttributeClass!.ToDisplayString();
+                if (fullname == typeof(Thing::ResourceName).FullName)
                     textureName = (string)attr.ConstructorArguments[0].Value!;
-                if (attr.AttributeClass.MetadataName == typeof(TriggeredByAttribute<object>).GetGenericTypeDefinition().Name)
+                if (fullname == typeof(Thing::TooltipName).FullName)
+                    tooltip = (string)attr.ConstructorArguments[0].Value!;
+                if (fullname == typeof(Thing::TooltipDescription).FullName)
+                    tooltip = (string)attr.ConstructorArguments[0].Value!;
+                if (attr.AttributeClass.MetadataName == typeof(Thing::TriggeredBy<object>).GetGenericTypeDefinition().Name)
                     trigger = attr.AttributeClass.TypeArguments[0];
             }
 
             builder.AppendLine($$"""
-                    public partial class {{nestedKlassName}} : {{containerName}}
+                    public partial class {{thingName}} // : {{containerName}}, ITooltipName
                     {
-                        public {{nestedKlassName}}() : base("{{textureName}}", {{(trigger is null ? "null" : $"Triggers.{GeneratorUtil.CapsUnderscore(trigger.Name)}")}}) {}
+                        // static string ITooltipName.Name => "{{tooltip}}";
+                        // public const string TOOLTIP_NAME = "{{tooltip}}";
+                        // public override string TooltipName { get; } = "{{tooltip}}";
+
+                        public {{thingName}}() : base("{{textureName}}", {{(trigger is null ? "null" : $"Triggers.{Util.CapsUnderscore(trigger.Name)}")}})
+                        {
+                            TooltipName = "{{tooltip}}";
+                            Description = "{{description}}";
+                        }
                     }
                 """);
         }

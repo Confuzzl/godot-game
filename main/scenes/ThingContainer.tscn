@@ -38,9 +38,10 @@ texture = ExtResource("2_dcgl7")
 [node name="Background" type="ColorRect" parent="."]
 unique_name_in_owner = true
 offset_left = 7.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 173.0
-offset_bottom = 112.0
+offset_bottom = 113.0
+mouse_filter = 1
 
 [node name="Separator" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -75,7 +76,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_cfee2")
 [node name="v0" type="VSeparator" parent="Separator"]
 unique_name_in_owner = true
 offset_left = 61.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 63.0
 offset_bottom = 60.0
 theme_override_constants/separation = 0
@@ -84,7 +85,7 @@ theme_override_styles/separator = SubResource("StyleBoxLine_jwf2d")
 [node name="v1" type="VSeparator" parent="Separator"]
 unique_name_in_owner = true
 offset_left = 117.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 119.0
 offset_bottom = 60.0
 theme_override_constants/separation = 0
@@ -95,7 +96,7 @@ unique_name_in_owner = true
 offset_left = 61.0
 offset_top = 60.0
 offset_right = 63.0
-offset_bottom = 112.0
+offset_bottom = 113.0
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_jwf2d")
 
@@ -104,7 +105,7 @@ unique_name_in_owner = true
 offset_left = 117.0
 offset_top = 60.0
 offset_right = 119.0
-offset_bottom = 112.0
+offset_bottom = 113.0
 theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_jwf2d")
 
@@ -113,49 +114,49 @@ unique_name_in_owner = true
 
 [node name="s0" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 10.0
-offset_top = 9.0
-offset_right = 60.0
-offset_bottom = 59.0
+offset_left = 9.0
+offset_top = 8.0
+offset_right = 59.0
+offset_bottom = 58.0
 metadata/_edit_use_anchors_ = true
 
 [node name="s1" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 66.0
-offset_top = 9.0
-offset_right = 116.0
-offset_bottom = 59.0
+offset_left = 65.0
+offset_top = 8.0
+offset_right = 115.0
+offset_bottom = 58.0
 metadata/_edit_use_anchors_ = true
 
 [node name="s2" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 122.0
-offset_top = 9.0
-offset_right = 172.0
-offset_bottom = 59.0
+offset_left = 121.0
+offset_top = 8.0
+offset_right = 171.0
+offset_bottom = 58.0
 metadata/_edit_use_anchors_ = true
 
 [node name="s3" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 10.0
-offset_top = 61.0
-offset_right = 60.0
-offset_bottom = 111.0
+offset_left = 9.0
+offset_top = 62.0
+offset_right = 59.0
+offset_bottom = 112.0
 metadata/_edit_use_anchors_ = true
 
 [node name="s4" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 66.0
-offset_top = 61.0
-offset_right = 116.0
-offset_bottom = 111.0
+offset_left = 65.0
+offset_top = 62.0
+offset_right = 115.0
+offset_bottom = 112.0
 metadata/_edit_use_anchors_ = true
 
 [node name="s5" type="TextureRect" parent="Slots"]
 unique_name_in_owner = true
-offset_left = 122.0
+offset_left = 121.0
 offset_top = 62.0
-offset_right = 172.0
+offset_right = 171.0
 offset_bottom = 112.0
 metadata/_edit_use_anchors_ = true
 

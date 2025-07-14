@@ -1,15 +1,16 @@
-using Matcha.Generator.Attributes;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Matcha.Things;
 
-[TriggerContainer]
+using Trigger = Generator.Attributes.Trigger;
+
+[Trigger::Container]
 public static partial class Triggers
 {
     public abstract class Base
     {
         public List<Thing> Things { get; } = [];
+        public string Tooltip { get; init; }
 
         public void Trigger()
         {
@@ -25,7 +26,7 @@ public static partial class Triggers
     public partial class OnMerge : Base;
     public partial class OnPassRoundGoal : Base;
 
-    [TimedTrigger]
+    [Trigger::Timed]
     public abstract class Timed(double i) : Base()
     {
         public double TimeSinceLastTriggered { get; set; } = 0;
