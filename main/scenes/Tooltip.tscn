@@ -1,24 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://b0ld8ojgewjl1"]
+[gd_scene load_steps=3 format=3 uid="uid://b0ld8ojgewjl1"]
 
-[ext_resource type="Script" uid="uid://dleah120tikn3" path="res://src/things/ThingTooltip.cs" id="1_jmbv0"]
+[ext_resource type="Script" uid="uid://bqkhwkks4nxfs" path="res://src/things/Tooltip.cs" id="1_jmbv0"]
 
-[node name="Tooltip" type="ColorRect"]
-offset_right = 90.0
-offset_bottom = 60.0
+[sub_resource type="SystemFont" id="SystemFont_jmbv0"]
+font_names = PackedStringArray("Comic Sans MS")
+
+[node name="Tooltip" type="ColorRect" node_paths=PackedStringArray("top", "text")]
+offset_right = 120.0
+offset_bottom = 90.0
 color = Color(0, 0, 0, 1)
 script = ExtResource("1_jmbv0")
+top = NodePath("VBoxContainer/Name")
+text = NodePath("VBoxContainer/Text")
 
-[node name="Name" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -45.0
-offset_top = -11.5
-offset_right = 45.0
-offset_bottom = 11.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Name" type="Label" parent="VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_jmbv0")
+theme_override_font_sizes/font_size = 15
 text = "Foobar"
+
+[node name="Text" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_fonts/font = SubResource("SystemFont_jmbv0")
+theme_override_font_sizes/font_size = 11
+text = "Foobar"
+autowrap_mode = 2

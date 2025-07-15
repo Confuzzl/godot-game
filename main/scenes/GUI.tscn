@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://d0desm2406035"]
+[gd_scene load_steps=17 format=3 uid="uid://d0desm2406035"]
 
 [ext_resource type="Script" uid="uid://bsr77ow8b0s6l" path="res://src/gui/Gui.cs" id="1_q7530"]
 [ext_resource type="Texture2D" uid="uid://bdb5aj0yr0q7x" path="res://assets/bg/grid.png" id="3_womn8"]
@@ -15,8 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://dvqpcb5e3c0an" path="res://scenes/Settings.tscn" id="13_vjrnn"]
 [ext_resource type="PackedScene" uid="uid://c3xu3xmlw34cu" path="res://scenes/Shop.tscn" id="14_8fbvn"]
 [ext_resource type="PackedScene" uid="uid://by3scwmp2lohy" path="res://scenes/Stats.tscn" id="15_ajyu1"]
+[ext_resource type="PackedScene" uid="uid://b0ld8ojgewjl1" path="res://scenes/Tooltip.tscn" id="16_8fbvn"]
 
-[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("Shop", "Stats", "Settings", "Characters", "Items")]
+[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("Shop", "Stats", "Settings", "Characters", "Items", "Tooltip")]
 follow_viewport_enabled = true
 script = ExtResource("1_q7530")
 Shop = NodePath("Shop")
@@ -24,6 +25,7 @@ Stats = NodePath("Stats")
 Settings = NodePath("Settings")
 Characters = NodePath("Characters")
 Items = NodePath("Items")
+Tooltip = NodePath("Tooltip")
 
 [node name="grid" type="TextureRect" parent="."]
 visible = false
@@ -251,3 +253,6 @@ visible = false
 [node name="Settings" parent="." instance=ExtResource("13_vjrnn")]
 unique_name_in_owner = true
 visible = false
+
+[node name="Tooltip" parent="." instance=ExtResource("16_8fbvn")]
+unique_name_in_owner = true

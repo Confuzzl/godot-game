@@ -14,15 +14,11 @@ public sealed class TriggerGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        {
-            var provider = Util.ClassesWithAttribute<Trigger::Container>(context);
-            context.RegisterSourceOutput(provider, ExecuteTriggerClasses);
-
-        }
-
+        var provider = Util.ClassesWithAttribute<Trigger::Container>(context);
+        context.RegisterSourceOutput(provider, ExecuteSingletons);
     }
 
-    private static void ExecuteTriggerClasses(SourceProductionContext source, GeneratorSyntaxContext syntax)
+    private static void ExecuteSingletons(SourceProductionContext source, GeneratorSyntaxContext syntax)
     {
         var klassSyntax = (ClassDeclarationSyntax)syntax.Node;
         string klassName = klassSyntax.Identifier.ToString();
@@ -35,20 +31,21 @@ public sealed class TriggerGenerator : IIncrementalGenerator
             public static partial class {{klassName}}
             {
             """);
-        foreach (INamedTypeSymbol nestedClass in syntax.SemanticModel.GetDeclaredSymbol(klassSyntax)!.GetTypeMembers())
+        foreach (INamedTypeSymbol trigger in syntax.SemanticModel.GetDeclaredSymbol(klassSyntax)!.GetTypeMembers())
         {
-            if (nestedClass.IsAbstract) continue;
+            if (trigger.IsAbstract) continue;
 
-            string nestedKlassName = nestedClass.Name;
+            string nestedKlassName = trigger.Name;
             string caps = Util.CapsUnderscore(nestedKlassName);
+
             builder.AppendLine($"\tpublic static readonly {nestedKlassName} {caps} = new();");
-            if (Util.HasAttribute<Trigger::Timed>(nestedClass.BaseType!))
+            if (Util.HasAttribute<Trigger::Timed>(trigger.BaseType!))
             {
                 timers.Add(caps);
             }
         }
         builder.AppendLine($"\tpublic static readonly Timed[] TIMERS = [{string.Join(", ", timers)}];");
         builder.AppendLine("}");
-        source.AddSource($"{klassName}.g.cs", builder.ToString());
+        source.AddSource($"{klassName}Singletons.g.cs", builder.ToString());
     }
 }

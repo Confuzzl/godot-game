@@ -20,8 +20,8 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 		set
 		{
 			field = value;
-			if (value) triggerBase?.Things.Add(this);
-			else triggerBase?.Things.Remove(this);
+			if (value) TriggerBase?.Things.Add(this);
+			else TriggerBase?.Things.Remove(this);
 		}
 	}
 	public bool Upgraded { get; set; }
@@ -30,7 +30,7 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 	public string Description { get; init; }
 
 
-	protected Triggers.Base triggerBase = triggerBase;
+	public Triggers.Base TriggerBase { get; } = triggerBase;
 
 	public void Trigger()
 	{
@@ -54,7 +54,7 @@ public abstract partial class Character(string name, Triggers.Base triggerBase) 
 	[TriggeredBy<Triggers.EveryHalfSecond>]
 	public partial class Hachiware;
 
-	//[TriggeredBy<Triggers.OnMerge>]
+	[TriggeredBy<Triggers.OnMerge>]
 	public partial class Usagi;
 }
 

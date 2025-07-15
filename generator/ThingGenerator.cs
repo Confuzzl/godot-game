@@ -53,7 +53,7 @@ public sealed class ThingGenerator : IIncrementalGenerator
             }
 
             builder.AppendLine($$"""
-                    public partial class {{thingName}} // : {{containerName}}, ITooltipName
+                    public partial class {{thingName}} : {{containerName}}
                     {
                         // static string ITooltipName.Name => "{{tooltip}}";
                         // public const string TOOLTIP_NAME = "{{tooltip}}";

@@ -17,7 +17,6 @@ namespace Matcha.Generator.Attributes
     {
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Container : Attribute { }
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Timed : Attribute { }
-        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class TooltipName(string _) : Attribute { }
     }
 }
 

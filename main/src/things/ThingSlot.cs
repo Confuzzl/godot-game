@@ -10,8 +10,6 @@ public abstract partial class ThingSlotBase : TextureRect
 	private static readonly Texture2D LOCKED = Util.GetTexture("gui/thing_lock.png");
 	private static readonly Texture2D LOCKED2 = Util.GetTexture("gui/thing_lock2.png");
 
-	private static readonly PackedScene tooltipScene = ResourceLoader.Load<PackedScene>("res://scenes/ThingTooltip.tscn");
-
 	public static readonly Vector2 SIZE = new(50, 50);
 	public uint Index { get; init; }
 	public ThingContainerBase Container { get; init; }
@@ -79,10 +77,17 @@ public partial class ThingSlot<T> : ThingSlotBase where T : Things.Thing
 		MouseEntered += () =>
 		{
 			hovered = true;
+
+			//Gui.MSG = $"{Thing?.TooltipName ?? "nothing"} {Thing?.TriggerBase.Tooltip ?? "nothing"}";
+			//Gui.MSG = Foo();
+			Game.INSTANCE.Gui.Tooltip.Set(Thing?.TooltipName ?? "nothing", Thing?.Description ?? "nothing", Thing?.TriggerBase.Tooltip ?? "nothing");
 		};
 		MouseExited += () =>
 		{
 			hovered = false;
+			//Gui.MSG = "";
 		};
 	}
+
+	private string Foo() => $"{Thing?.TooltipName ?? "none"} {Thing?.TriggerBase?.Tooltip ?? "none"}";
 }

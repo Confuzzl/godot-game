@@ -5,6 +5,8 @@ using System;
 namespace Matcha;
 public partial class Gui : CanvasLayer
 {
+	public static string MSG = "";
+
 	public abstract partial class Window : Node2D
 	{
 		public virtual void OnOpen() { }
@@ -18,6 +20,8 @@ public partial class Gui : CanvasLayer
 
 	[Export] public CharacterContainer Characters { get; private set; }
 	[Export] public ItemContainer Items { get; private set; }
+
+	[Export] public Tooltip Tooltip { get; private set; }
 
 	public override void _Ready()
 	{
@@ -50,6 +54,8 @@ public partial class Gui : CanvasLayer
 	}
 	public override void _Process(double delta)
 	{
+		var label = GetNode<Label>("Label");
+		label.Text = MSG;
 		//GetNode<Label>("Label").Text = $"{Game.INSTANCE.Machine.MyState} {Game.INSTANCE.Machine.Claw.MyState}";
 	}
 

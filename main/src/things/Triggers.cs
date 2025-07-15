@@ -7,10 +7,10 @@ using Trigger = Generator.Attributes.Trigger;
 [Trigger::Container]
 public static partial class Triggers
 {
-    public abstract class Base
+    public abstract class Base(string? tooltip = null)
     {
         public List<Thing> Things { get; } = [];
-        public string Tooltip { get; init; }
+        public string Tooltip { get; init; } = tooltip ?? "???";
 
         public void Trigger()
         {
@@ -19,22 +19,22 @@ public static partial class Triggers
         }
     }
 
-    public partial class OnSend : Base;
-    public partial class OnGrab : Base;
-    public partial class OnDeposit : Base;
-    public partial class OnRestock : Base;
-    public partial class OnMerge : Base;
-    public partial class OnPassRoundGoal : Base;
+    public partial class OnSend() : Base("when claw is sent");
+    public partial class OnGrab() : Base("when claw grabs");
+    public partial class OnDeposit() : Base("when claw deposits");
+    public partial class OnRestock() : Base("every restock");
+    public partial class OnMerge() : Base("every merge");
+    public partial class OnPassRoundGoal() : Base("every time goal is passed");
 
     [Trigger::Timed]
-    public abstract class Timed(double i) : Base()
+    public abstract class Timed(double i, string t = null) : Base(t)
     {
         public double TimeSinceLastTriggered { get; set; } = 0;
         public double Interval { get; } = i;
     }
-    public partial class EveryHalfSecond() : Timed(0.5);
-    public partial class EveryOneSecond() : Timed(1.0);
-    public partial class EveryTwoSecond() : Timed(2.0);
+    public partial class EveryHalfSecond() : Timed(0.5, "every 0.5 seconds");
+    public partial class EveryOneSecond() : Timed(1.0, "every second");
+    public partial class EveryTwoSecond() : Timed(2.0, "every 2 seconds");
 }
 
 
