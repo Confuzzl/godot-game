@@ -36,7 +36,7 @@ public sealed class ThingGenerator : IIncrementalGenerator
             string textureName = thingName.ToLower();
             string tooltip = string.Concat(thingName.Select(
                 (x, i) => ((i > 0 && char.IsUpper(x)) ? " " : "") + x.ToString()));
-            string description = "";
+            string description = "no description";
             ITypeSymbol? trigger = null;
 
             foreach (AttributeData attr in thing.GetAttributes())
@@ -47,7 +47,7 @@ public sealed class ThingGenerator : IIncrementalGenerator
                 if (fullname == typeof(Thing::TooltipName).FullName)
                     tooltip = (string)attr.ConstructorArguments[0].Value!;
                 if (fullname == typeof(Thing::TooltipDescription).FullName)
-                    tooltip = (string)attr.ConstructorArguments[0].Value!;
+                    description = (string)attr.ConstructorArguments[0].Value!;
                 if (attr.AttributeClass.MetadataName == typeof(Thing::TriggeredBy<object>).GetGenericTypeDefinition().Name)
                     trigger = attr.AttributeClass.TypeArguments[0];
             }
@@ -55,10 +55,6 @@ public sealed class ThingGenerator : IIncrementalGenerator
             builder.AppendLine($$"""
                     public partial class {{thingName}} : {{containerName}}
                     {
-                        // static string ITooltipName.Name => "{{tooltip}}";
-                        // public const string TOOLTIP_NAME = "{{tooltip}}";
-                        // public override string TooltipName { get; } = "{{tooltip}}";
-
                         public {{thingName}}() : base("{{textureName}}", {{(trigger is null ? "null" : $"Triggers.{Util.CapsUnderscore(trigger.Name)}")}})
                         {
                             TooltipName = "{{tooltip}}";

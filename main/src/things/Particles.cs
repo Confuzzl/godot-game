@@ -21,11 +21,11 @@ public partial class Particles : GpuParticles2D
 		Vector2 step = (end - start) / (Amount - 1);
 
 		Emit(start);
-		Emit(end);
 		for (var i = 1; i < Amount - 1; i++)
 		{
 			Emit(start + step * i);
 		}
+		Emit(end);
 	}
 	//public override void _Process(double delta)
 	//{

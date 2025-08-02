@@ -2,11 +2,34 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
-namespace Matcha;
+namespace Matcha.Things;
 
-public abstract partial class ThingContainerBase : Node2D
+public abstract partial class ThingContainerBase : Control
 {
+
+	public abstract Vector2 DefaultPositionOfSlot(uint i);
+}
+
+public abstract partial class ThingContainer<T, SlotType>(uint numSlots) : ThingContainerBase, IEnumerable<SlotType>
+	where T : Thing where SlotType : ThingSlotBase
+{
+	protected readonly SlotType[] slots = new SlotType[numSlots];
+
+	public SlotType this[uint i] => slots[i];
+
+	public IEnumerator<SlotType> GetEnumerator() => slots.AsEnumerable().GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+public partial class InventoryContainer<T> : ThingContainer<T, InventorySlot<T>> where T : Thing
+{
+	private static readonly Vector2 SLOT_OFFSET = new(9, 8);
+	public override Vector2 DefaultPositionOfSlot(uint i) => SLOT_OFFSET +
+		new Vector2((i % 3) * (ThingSlotBase.SIZE.X + 6), (i / 3) * (ThingSlotBase.SIZE.Y + 4));
+
 	private const float SEPERATOR_BUFFER = 8;
 
 	public Color BackgroundColor
@@ -41,7 +64,7 @@ public abstract partial class ThingContainerBase : Node2D
 
 	public GpuParticles2D TriggerParticles;
 
-	protected ThingContainerBase(Color bg, Color sep)
+	protected InventoryContainer(Color bg, Color sep) : base(6)
 	{
 		BackgroundColor = bg;
 		SeparatorColor = sep;
@@ -51,47 +74,57 @@ public abstract partial class ThingContainerBase : Node2D
 	{
 		TriggerParticles = GetNode<GpuParticles2D>("%SlotTriggerParticles");
 		TriggerParticles.Amount = 1;
+
+		var slotContainer = GetNode<Node2D>("%Slots");
+		for (var i = 0u; i < slots.Length; i++)
+		{
+			var placeholder = slotContainer.GetNode<GameSlot>($"%s{i}");
+
+			Debug.Assert(placeholder.Size == ThingSlotBase.SIZE, "inconsistent thingslot size");
+			Debug.Assert(placeholder.Position == DefaultPositionOfSlot(i), "inconsistent thingslot position");
+
+			//var slot = new InventorySlot<T>(i, this, placeholder.Position, placeholder.Size)
+			//{
+			//    MouseFilter = Control.MouseFilterEnum.Pass,
+			//    Locked = i >= OpenSlots
+			//};
+			var slot = new InventorySlot<T>(i, this, placeholder)
+			{
+				Locked = i >= OpenSlots
+			};
+
+			//slot.PivotOffset = slot.Size / 2;
+
+			slots[i] = slot;
+		}
 	}
 }
-public partial class ThingContainer<T>(Color bg, Color sep) : ThingContainerBase(bg, sep) where T : Things.Thing
+
+public partial class ShopContainer<T>() : ThingContainer<T, ShopSlot<T>>(6) where T : Things.Thing
 {
-	public readonly ThingSlot<T>[] slots = new ThingSlot<T>[6];
+
+	private static readonly Vector2 SLOT_OFFSET = new(0, 0);
+	public override Vector2 DefaultPositionOfSlot(uint i) => SLOT_OFFSET +
+		new Vector2((i % 3) * (ThingSlotBase.SIZE.X + 5), (i / 3) * (ThingSlotBase.SIZE.Y + 30));
 
 	public override void _Ready()
 	{
-		base._Ready();
-		var slots = GetNode<Node2D>("%Slots");
-		for (var i = 0u; i < 6; i++)
+		for (var i = 0u; i < slots.Length; i++)
 		{
-			var placeholder = slots.GetNode<TextureRect>($"%s{i}");
-			var slot = new ThingSlot<T>(i, this, placeholder.Position, placeholder.Size);
-			if (i >= OpenSlots) slot.Locked = true;
-			slots.RemoveChild(placeholder);
-			slots.AddChild(slot);
-			this.slots[i] = slot;
+			var placeholder = GetNode<GameShopSlot>($"%s{i}");
+
+			Debug.Assert(placeholder.Size == ThingSlotBase.SIZE, "inconsistent thingslot size");
+			Debug.Assert(placeholder.Position == DefaultPositionOfSlot(i), "inconsistent thingslot position");
+
+			//var priceContainer = placeholder.GetNode<HBoxContainer>("%Container");
+			//var priceLabel = priceContainer.GetNode<Label>("%Price");
+			//var slot = new ShopSlot<T>(i, this, placeholder.Position, placeholder.Size, priceContainer, priceLabel)
+			//{
+			//    MouseFilter = Control.MouseFilterEnum.Pass
+			//};
+			var slot = new ShopSlot<T>(i, this, placeholder);
+
+			slots[i] = slot;
 		}
 	}
-
-}
-
-public partial class ThingContainer<T> : IEnumerable<ThingSlot<T>>
-{
-	public ThingSlot<T> this[uint i] => slots[i];
-
-	public class Iterator(ThingSlot<T>[] buffer) : IEnumerator<ThingSlot<T>>
-	{
-		private readonly ThingSlot<T>[] buffer = buffer;
-		private uint index = uint.MaxValue;
-
-		public ThingSlot<T> Current => buffer[index];
-		object IEnumerator.Current => Current;
-
-		public void Dispose() { }
-
-		public bool MoveNext() => unchecked(++index) < buffer.Length;
-		public void Reset() { index = 0; }
-	}
-
-	public IEnumerator<ThingSlot<T>> GetEnumerator() => new Iterator(slots);
-	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

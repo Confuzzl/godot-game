@@ -1,93 +1,288 @@
 using Godot;
-using System;
 using System.Diagnostics;
-using System.Linq.Expressions;
 
-namespace Matcha;
+namespace Matcha.Things;
 
-public abstract partial class ThingSlotBase : TextureRect
+public abstract partial class ThingSlotBase
 {
-	private static readonly Texture2D LOCKED = Util.GetTexture("gui/thing_lock.png");
-	private static readonly Texture2D LOCKED2 = Util.GetTexture("gui/thing_lock2.png");
+	public GameSlot GameNode { get; private set; }
 
 	public static readonly Vector2 SIZE = new(50, 50);
-	public uint Index { get; init; }
+	public uint Index { get; private set; }
+
+	private Vector2 defaultPosition;
 	public ThingContainerBase Container { get; init; }
 
-	public bool Locked { get; set; }
+	public static ThingSlotBase? CURRENT_DRAGGING { get; private set; }
 
-	protected bool hovered = false;
+	// null if is dragging
+	public static ThingSlotBase? HOVERING { get; private set; }
 
-	protected ThingSlotBase(uint i, ThingContainerBase c, Vector2 position, Vector2 size)
+	public bool Hovered
 	{
-		Name = $"s{i}";
-		Position = position;
-		Size = size;
-		Debug.Assert(size == SIZE, "thing slot inconsistent size");
+		get;
+		set
+		{
+			if (field != value)
+				if (value) OnHover();
+				else OffHover();
+			field = value;
+		}
+	} = false;
+	public bool Dragged
+	{
+		get;
+		set
+		{
+			if (field != value)
+				if (value) OnDrag();
+				else OffDrag();
+			field = value;
+		}
+	} = false;
+
+
+	protected ThingSlotBase(uint i, ThingContainerBase c, GameSlot GameNode)
+	{
 		Index = i;
+		this.GameNode = GameNode;
+		GameNode.Proxy = this;
+		defaultPosition = GameNode.Position;
 		Container = c;
-		StretchMode = StretchModeEnum.KeepCentered;
 	}
 
-	public void ShowLock()
+	private void OnDrag()
 	{
-		Texture = LOCKED2;
-		SelfModulate = Container.SeparatorColor;
+		const float SCALE = 1.25f;
+		CURRENT_DRAGGING = this;
+		HOVERING = null;
+		GameNode.Scale = new(SCALE, SCALE);
+		GameNode.ZIndex = 1;
+
+		OnDragImpl();
 	}
-	public void HideLock()
+	private void OffDrag()
 	{
-		Texture = null;
-		SelfModulate = Colors.White;
+		CURRENT_DRAGGING = null;
+		GameNode.Scale = Vector2.One;
+		GameNode.ZIndex = 0;
+
+		if (SuccessfulDragCondition)
+		{
+			SuccessfulOffDragImpl();
+		}
+		else
+		{
+			UnsuccessfulOffDragImpl();
+			GameNode.Position = defaultPosition;
+		}
+	}
+	protected abstract bool SuccessfulDragCondition { get; }
+	protected abstract void SuccessfulOffDragImpl();
+	protected abstract void UnsuccessfulOffDragImpl();
+	protected abstract void OnDragImpl();
+
+	protected void OnHover()
+	{
+		if (CURRENT_DRAGGING != this)
+			HOVERING = this;
+		OnHoverTooltip();
+	}
+	protected void OffHover()
+	{
+		if (HOVERING == this)
+			HOVERING = null;
+		OffHoverTooltip();
+		DragReturn();
+	}
+	protected abstract void OnHoverTooltip();
+	protected abstract void OffHoverTooltip();
+
+	private void DragReturn()
+	{
+		Dragged = false;
+		HOVERING?.OnHover();
 	}
 
-	public void Trigger()
+	public virtual void ProcessCallback(double delta)
 	{
-		Container.TriggerParticles.EmitParticle(
-			Container.Transform.Translated(Position + SIZE / 2),
-			Vector2.Zero,
-			Colors.Blue,
-			Colors.White,
-			(uint)(GpuParticles2D.EmitFlags.Position | GpuParticles2D.EmitFlags.Color)
-		);
+		Rect2 aabb = new(GameNode.Position, GameNode.Size);
+		Hovered = aabb.HasPoint(Container.GetLocalMousePosition());
+	}
+
+	public abstract void InputCallback(InputEvent @event);
+
+	public static void Swap(ThingSlotBase a, ThingSlotBase b)
+	{
+		Debug.Assert(a.GetType() == b.GetType());
+		Debug.Assert(a.Container == b.Container);
+		//(a.Container, b.Container) = (b.Container, a.Container);
+		(a.GameNode, b.GameNode) = (b.GameNode, a.GameNode);
+		(a.Index, b.Index) = (b.Index, a.Index);
+		(a.defaultPosition, b.defaultPosition) = (b.defaultPosition, a.defaultPosition);
+		a.GameNode.Position = a.defaultPosition;
+		b.GameNode.Position = b.defaultPosition;
 	}
 }
 
-public partial class ThingSlot<T> : ThingSlotBase where T : Things.Thing
+public abstract partial class ThingSlot<T>(uint i, ThingContainerBase c, GameSlot g) :
+	ThingSlotBase(i, c, g) where T : Thing
 {
-	public T Thing
+	public virtual T? Thing
 	{
 		get;
 		set
 		{
 			field?.Active = false;
 			field = value;
-			if (field == null) return;
+			if (field is null) return;
 			field.Slot = this;
-			field.Active = true;
-			Texture = field.Texture;
+			field.Active = ActivateThingOnSet;
+			GameNode.Texture = field.Texture;
+		}
+	}
+	protected abstract bool ActivateThingOnSet { get; }
+
+	public override void InputCallback(InputEvent @event)
+	{
+		if (!Hovered || Thing is null) return;
+
+		if (@event is InputEventMouseButton mouse)
+		{
+			Dragged = mouse.Pressed && DragCondition;
+		}
+		if (@event is InputEventMouseMotion move)
+		{
+			if (!Dragged) return;
+			GameNode.Position += move.Relative;
+		}
+	}
+	protected virtual bool DragCondition => true;
+
+	protected abstract void OnHoverTooltipImpl();
+	protected override void OnHoverTooltip()
+	{
+		if (CURRENT_DRAGGING is not null) return;
+		OnHoverTooltipImpl();
+	}
+	protected override void OffHoverTooltip()
+	{
+		Game.INSTANCE.Gui.Tooltip.Hide();
+	}
+}
+public interface IInventorySlot
+{
+	public abstract void Trigger();
+	public abstract void ShowLock();
+	public abstract void HideLock();
+}
+public partial class InventorySlot<T>(uint i, ThingContainerBase c, GameSlot g) :
+	ThingSlot<T>(i, c, g), IInventorySlot where T : Thing
+{
+	protected override bool ActivateThingOnSet => true;
+
+	public new InventoryContainer<T> Container => (InventoryContainer<T>)base.Container;
+
+
+	private static readonly Texture2D LOCKED = Util.GetTexture("gui/thing_lock2.png");
+	public bool Locked
+	{
+		get;
+		set { if (field = value) ShowLock(); }
+	}
+	public void ShowLock()
+	{
+		GameNode.Texture = LOCKED;
+		GameNode.SelfModulate = Container.SeparatorColor;
+	}
+	public void HideLock()
+	{
+		GameNode.Texture = null;
+		GameNode.SelfModulate = Colors.White;
+	}
+
+	public void Trigger()
+	{
+		Container.TriggerParticles.EmitParticle(
+			Transform2D.Identity.Translated(GameNode.GlobalPosition + SIZE / 2),
+			Vector2.Zero,
+			Colors.Blue,
+			Colors.White,
+			(uint)(GpuParticles2D.EmitFlags.Position | GpuParticles2D.EmitFlags.Color)
+		);
+	}
+
+	public override void InputCallback(InputEvent @event)
+	{
+		if (Locked) return;
+		base.InputCallback(@event);
+	}
+
+	protected override void OnHoverTooltipImpl()
+	{
+		if (Thing is null)
+		{
+			if (Locked) Game.INSTANCE.Gui.Tooltip.Set("Locked Slot", "", "");
+		}
+		else
+		{
+			Game.INSTANCE.Gui.Tooltip.Set(Thing.TooltipName, Thing.Description, Thing.TriggerBase?.Tooltip ?? "no trigger");
 		}
 	}
 
+	protected override bool SuccessfulDragCondition =>
+		HOVERING is InventorySlot<T> hov && Container == hov.Container && !hov.Locked;
 
+	protected override void OnDragImpl() { }
 
-	public ThingSlot(uint i, ThingContainerBase c, Vector2 p, Vector2 s) : base(i, c, p, s)
+	protected override void SuccessfulOffDragImpl()
 	{
-		//new Tooltip().Set();
-
-		MouseEntered += () =>
+		Swap(this, HOVERING);
+		OnHover();
+	}
+	protected override void UnsuccessfulOffDragImpl() { }
+}
+public partial class ShopSlot<T>(uint i, ThingContainerBase c, GameShopSlot g) :
+	ThingSlot<T>(i, c, g) where T : Thing
+{
+	public override T? Thing
+	{
+		get => base.Thing;
+		set
 		{
-			hovered = true;
-
-			//Gui.MSG = $"{Thing?.TooltipName ?? "nothing"} {Thing?.TriggerBase.Tooltip ?? "nothing"}";
-			//Gui.MSG = Foo();
-			Game.INSTANCE.Gui.Tooltip.Set(Thing?.TooltipName ?? "nothing", Thing?.Description ?? "nothing", Thing?.TriggerBase.Tooltip ?? "nothing");
-		};
-		MouseExited += () =>
-		{
-			hovered = false;
-			//Gui.MSG = "";
-		};
+			base.Thing = value;
+			if (g.Container.Visible = value is not null)
+			{
+				g.Label.Text = $"{value.Price}";
+			}
+		}
 	}
 
-	private string Foo() => $"{Thing?.TooltipName ?? "none"} {Thing?.TriggerBase?.Tooltip ?? "none"}";
+	protected override bool ActivateThingOnSet => false;
+
+	protected override void OnHoverTooltipImpl()
+	{
+		if (Thing is not null)
+			Game.INSTANCE.Gui.Tooltip.Set(Thing.TooltipName, Thing.Description, Thing.TriggerBase?.Tooltip ?? "no trigger");
+	}
+
+	protected override bool DragCondition => Game.INSTANCE.Tickets >= Thing.Price;
+
+	protected override bool SuccessfulDragCondition =>
+		HOVERING is InventorySlot<T> hov && hov.Thing is null && !hov.Locked;
+
+	protected override void SuccessfulOffDragImpl()
+	{
+		((InventorySlot<T>)HOVERING).Thing = Thing;
+		Thing = null;
+	}
+	protected override void UnsuccessfulOffDragImpl()
+	{
+		Game.INSTANCE.Tickets += Thing.Price;
+	}
+
+	protected override void OnDragImpl()
+	{
+		Game.INSTANCE.Tickets -= Thing.Price;
+	}
 }

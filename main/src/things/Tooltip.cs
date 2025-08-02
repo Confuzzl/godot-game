@@ -3,12 +3,17 @@ using System;
 
 namespace Matcha;
 
-public partial class Tooltip : ColorRect
+public partial class Tooltip : PanelContainer
 {
 	private static readonly Vector2 OFFSET = new(5, 5);
 
 	[Export] private Label top;
 	[Export] private Label text;
+
+	public Tooltip()
+	{
+		ZIndex = 1;
+	}
 
 	public override void _Process(double delta)
 	{
@@ -19,10 +24,13 @@ public partial class Tooltip : ColorRect
 	public void Set(string name, string description, string trigger)
 	{
 		top.Text = name;
-		text.Text = $"""
-			* {trigger}
-			{description}
-			""";
-		//top.
+		text.Text = "";
+		if (trigger != "")
+			text.Text += $"* {trigger}\n";
+		if (description != "")
+			text.Text += description;
+		Size = Vector2.Zero;
+		Show();
+
 	}
 }

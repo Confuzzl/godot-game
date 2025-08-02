@@ -11,7 +11,6 @@ using Generator.Attributes.Thing;
 
 public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 {
-
 	public Texture2D Texture { get; init; } = texture;
 	public ThingSlotBase? Slot { get; set; }
 	public bool Active
@@ -24,19 +23,19 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 			else TriggerBase?.Things.Remove(this);
 		}
 	}
+	public uint Price { get; set; } = 4;
 	public bool Upgraded { get; set; }
 
 	public string TooltipName { get; init; }
 	public string Description { get; init; }
 
 
-	public Triggers.Base TriggerBase { get; } = triggerBase;
+	public Triggers.Base? TriggerBase { get; } = triggerBase;
 
 	public void Trigger()
 	{
 		Debug.Assert(Active && Slot is not null, "Thing triggered when inactive or null slot");
-		//GD.Print($"activating {Slot?.Index}");
-		Slot.Trigger();
+		((IInventorySlot)Slot).Trigger();
 		TriggerImpl();
 	}
 
@@ -47,8 +46,12 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 [BaseType]
 public abstract partial class Character(string name, Triggers.Base triggerBase) : Thing(Util.GetTexture($"characters/{name}.png"), triggerBase)
 {
-
-	[ResourceName("chiikawa2"), TooltipName("evil!"), TriggeredBy<Triggers.OnRestock>]
+	[
+		ResourceName("chiikawa2"),
+		TooltipName("evil!"),
+		TooltipDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+		TriggeredBy<Triggers.OnRestock>
+	]
 	public partial class Chiikawa { protected override void TriggerImpl() { GD.Print("CHIIKAWA!"); } }
 
 	[TriggeredBy<Triggers.EveryHalfSecond>]

@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3xu3xmlw34cu"]
+[gd_scene load_steps=10 format=3 uid="uid://c3xu3xmlw34cu"]
 
 [ext_resource type="Script" uid="uid://x1eshilo2tv8" path="res://src/gui/Shop.cs" id="1_rgcs7"]
 [ext_resource type="Texture2D" uid="uid://bdb5aj0yr0q7x" path="res://assets/bg/grid.png" id="2_ec5oe"]
+[ext_resource type="PackedScene" uid="uid://dev68raya6aj3" path="res://scenes/ShopThingContainer.tscn" id="3_yltc6"]
+[ext_resource type="Script" uid="uid://cj5r3bg11wvb3" path="res://src/things/ShopCharacterContainer.cs" id="4_fpbbi"]
 [ext_resource type="Texture2D" uid="uid://d2r5otvli3500" path="res://assets/gui/shop/pibble1.png" id="4_yltc6"]
 [ext_resource type="Texture2D" uid="uid://cf6w6qa534p0e" path="res://assets/gui/shop/pibble2.png" id="5_fpbbi"]
+[ext_resource type="Script" uid="uid://bcbib8itquvgg" path="res://src/things/ShopItemContainer.cs" id="5_m0qts"]
 
 [sub_resource type="SystemFont" id="SystemFont_cimqq"]
 font_names = PackedStringArray("Comic Sans MS")
@@ -23,23 +26,44 @@ animations = [{
 "speed": 6.0
 }]
 
-[node name="Shop" type="Node2D"]
+[node name="Shop" type="Control" node_paths=PackedStringArray("Characters", "Items")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 540.0
 script = ExtResource("1_rgcs7")
+Characters = NodePath("Main/GridContainer/CharacterContainer/Characters")
+Items = NodePath("Main/GridContainer/ItemContainer/Items")
 
 [node name="grid" type="TextureRect" parent="."]
 visible = false
 texture_filter = 1
+layout_mode = 2
 offset_right = 960.0
 offset_bottom = 540.0
 texture = ExtResource("2_ec5oe")
 
-[node name="NameBar" type="ColorRect" parent="."]
-offset_left = 300.0
-offset_right = 780.0
-offset_bottom = 60.0
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -270.0
+offset_right = 300.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="NameBar" type="ColorRect" parent="Main"]
+custom_minimum_size = Vector2(480, 60)
+layout_mode = 2
 color = Color(1, 1, 0, 1)
 
-[node name="Label" type="Label" parent="NameBar"]
+[node name="Label" type="Label" parent="Main/NameBar"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -56,69 +80,67 @@ theme_override_fonts/font = SubResource("SystemFont_cimqq")
 theme_override_font_sizes/font_size = 40
 text = "Pibble Emporium"
 
-[node name="Characters" type="ColorRect" parent="."]
-offset_left = 300.0
-offset_top = 60.0
-offset_right = 540.0
-offset_bottom = 300.0
+[node name="GridContainer" type="GridContainer" parent="Main"]
+custom_minimum_size = Vector2(480, 480)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="CharacterContainer" type="ColorRect" parent="Main/GridContainer"]
+custom_minimum_size = Vector2(240, 240)
+layout_mode = 2
 color = Color(0, 1, 0, 1)
 
-[node name="Items" type="ColorRect" parent="."]
-offset_left = 300.0
-offset_top = 300.0
-offset_right = 540.0
-offset_bottom = 540.0
-color = Color(0, 0, 1, 1)
-
-[node name="Control" type="GridContainer" parent="Items"]
+[node name="Characters" parent="Main/GridContainer/CharacterContainer" instance=ExtResource("3_yltc6")]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -79.0
-offset_top = -25.0
-offset_right = 79.0
-offset_bottom = 25.0
+offset_left = -80.0
+offset_top = -65.0
+offset_right = 80.0
+offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/v_separation = 20
-columns = 3
+script = ExtResource("4_fpbbi")
 
-[node name="ColorRect" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
+[node name="Upgrades" type="ColorRect" parent="Main/GridContainer"]
+custom_minimum_size = Vector2(240, 240)
 layout_mode = 2
-
-[node name="ColorRect2" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="ColorRect3" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="ColorRect4" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="ColorRect5" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="ColorRect6" type="ColorRect" parent="Items/Control"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="Upgrades" type="ColorRect" parent="."]
-offset_left = 540.0
-offset_top = 60.0
-offset_right = 780.0
-offset_bottom = 540.0
 color = Color(1, 0, 0, 1)
 
-[node name="Shopkeeper" type="AnimatedSprite2D" parent="."]
-position = Vector2(660, 450)
+[node name="ItemContainer" type="ColorRect" parent="Main/GridContainer"]
+custom_minimum_size = Vector2(240, 240)
+layout_mode = 2
+color = Color(0, 0, 1, 1)
+
+[node name="Items" parent="Main/GridContainer/ItemContainer" instance=ExtResource("3_yltc6")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -65.0
+offset_right = 80.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_m0qts")
+
+[node name="Container" type="Control" parent="Main/GridContainer"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[node name="Shopkeeper" type="AnimatedSprite2D" parent="Main/GridContainer/Container"]
+position = Vector2(120, 150)
 sprite_frames = SubResource("SpriteFrames_m0qts")
 autoplay = "default"
 frame = 1

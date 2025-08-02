@@ -4,33 +4,32 @@
 
 [sub_resource type="SystemFont" id="SystemFont_jmbv0"]
 font_names = PackedStringArray("Comic Sans MS")
+subpixel_positioning = 0
 
-[node name="Tooltip" type="ColorRect" node_paths=PackedStringArray("top", "text")]
+[node name="Tooltip" type="PanelContainer" node_paths=PackedStringArray("top", "text")]
+custom_minimum_size = Vector2(120, 0)
 offset_right = 120.0
-offset_bottom = 90.0
-color = Color(0, 0, 0, 1)
+offset_bottom = 39.0
 script = ExtResource("1_jmbv0")
-top = NodePath("VBoxContainer/Name")
-text = NodePath("VBoxContainer/Text")
+top = NodePath("Container/Name")
+text = NodePath("Container/Text")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Container" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
 
-[node name="Name" type="Label" parent="VBoxContainer"]
+[node name="Name" type="Label" parent="Container"]
 clip_contents = true
 layout_mode = 2
 theme_override_fonts/font = SubResource("SystemFont_jmbv0")
 theme_override_font_sizes/font_size = 15
 text = "Foobar"
 
-[node name="Text" type="Label" parent="VBoxContainer"]
+[node name="Text" type="Label" parent="Container"]
+clip_contents = true
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_vertical = 1
+theme_override_constants/line_spacing = -5
 theme_override_fonts/font = SubResource("SystemFont_jmbv0")
 theme_override_font_sizes/font_size = 11
 text = "Foobar"

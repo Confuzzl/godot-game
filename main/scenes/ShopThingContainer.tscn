@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://dev68raya6aj3"]
+
+[ext_resource type="PackedScene" uid="uid://bxj0jjputx37l" path="res://scenes/ShopSlot.tscn" id="1_f2jgx"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 160.0
+offset_bottom = 130.0
+
+[node name="s0" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+metadata/_edit_lock_ = true
+
+[node name="s1" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 55.0
+offset_right = 105.0
+metadata/_edit_lock_ = true
+
+[node name="s2" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 110.0
+offset_right = 160.0
+metadata/_edit_lock_ = true
+
+[node name="s3" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 80.0
+offset_bottom = 130.0
+metadata/_edit_lock_ = true
+
+[node name="s4" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 55.0
+offset_top = 80.0
+offset_right = 105.0
+offset_bottom = 130.0
+metadata/_edit_lock_ = true
+
+[node name="s5" parent="." instance=ExtResource("1_f2jgx")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 110.0
+offset_top = 80.0
+offset_right = 160.0
+offset_bottom = 130.0
+metadata/_edit_lock_ = true

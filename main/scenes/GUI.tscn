@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://bdb5aj0yr0q7x" path="res://assets/bg/grid.png" id="3_womn8"]
 [ext_resource type="Texture2D" uid="uid://c3rdwe8cqupkv" path="res://assets/gui/goal_board.png" id="4_cws7i"]
 [ext_resource type="Texture2D" uid="uid://byjf8msjo3enp" path="res://assets/gui/ticket.png" id="5_u3xxf"]
-[ext_resource type="PackedScene" uid="uid://b1rtaw4eb1p4j" path="res://scenes/ThingContainer.tscn" id="6_u3xxf"]
-[ext_resource type="Script" uid="uid://de2740miykamf" path="res://src/things/CharacterContainer.cs" id="7_cekc3"]
-[ext_resource type="Script" uid="uid://hnw8drb41r0u" path="res://src/things/ItemContainer.cs" id="8_1i4pd"]
+[ext_resource type="PackedScene" uid="uid://b1rtaw4eb1p4j" path="res://scenes/InventoryThingContainer.tscn" id="6_u3xxf"]
+[ext_resource type="Script" uid="uid://dny5w3tifg4f8" path="res://src/things/InventoryCharacterContainer.cs" id="7_cekc3"]
+[ext_resource type="Script" uid="uid://d3snhwjksn0hf" path="res://src/things/InventoryItemContainer.cs" id="8_1i4pd"]
 [ext_resource type="Texture2D" uid="uid://b52ua5p5quv2d" path="res://assets/gui/score_under.png" id="9_dcyui"]
 [ext_resource type="Texture2D" uid="uid://cutibk2c7o63m" path="res://assets/gui/score_over2.png" id="10_8inel"]
 [ext_resource type="Texture2D" uid="uid://nk6tcp1byoot" path="res://assets/gui/score_progress.png" id="11_vjrnn"]
@@ -40,6 +40,7 @@ offset_left = 810.0
 offset_right = 930.0
 offset_bottom = 60.0
 texture = ExtResource("4_cws7i")
+metadata/_edit_lock_ = true
 
 [node name="TicketCount" type="Label" parent="TicketBox"]
 unique_name_in_owner = true
@@ -63,12 +64,18 @@ texture = ExtResource("5_u3xxf")
 
 [node name="Characters" parent="." instance=ExtResource("6_u3xxf")]
 unique_name_in_owner = true
-position = Vector2(60, 120)
+offset_left = 60.0
+offset_top = 120.0
+offset_right = 240.0
+offset_bottom = 240.0
 script = ExtResource("7_cekc3")
 
 [node name="Items" parent="." instance=ExtResource("6_u3xxf")]
 unique_name_in_owner = true
-position = Vector2(60, 300)
+offset_left = 60.0
+offset_top = 300.0
+offset_right = 240.0
+offset_bottom = 420.0
 script = ExtResource("8_1i4pd")
 
 [node name="ScoreBar" type="TextureProgressBar" parent="."]
@@ -85,6 +92,7 @@ texture_progress = ExtResource("11_vjrnn")
 texture_progress_offset = Vector2(15, 5)
 tint_progress = Color(0, 1, 0.0625, 1)
 script = ExtResource("12_8fbvn")
+metadata/_edit_lock_ = true
 
 [node name="RoundScore" type="Label" parent="ScoreBar"]
 unique_name_in_owner = true
@@ -147,6 +155,7 @@ offset_left = 660.0
 offset_right = 780.0
 offset_bottom = 60.0
 texture = ExtResource("4_cws7i")
+metadata/_edit_lock_ = true
 
 [node name="Token" type="TextureRect" parent="Screen"]
 unique_name_in_owner = true
@@ -223,6 +232,7 @@ offset_right = 900.0
 offset_bottom = 180.0
 focus_mode = 0
 text = "Shop"
+metadata/_edit_lock_ = true
 
 [node name="StatsButton" type="Button" parent="."]
 unique_name_in_owner = true
@@ -232,6 +242,7 @@ offset_right = 900.0
 offset_bottom = 300.0
 focus_mode = 0
 text = "Stats"
+metadata/_edit_lock_ = true
 
 [node name="SettingsButton" type="Button" parent="."]
 unique_name_in_owner = true
@@ -241,6 +252,7 @@ offset_right = 900.0
 offset_bottom = 420.0
 focus_mode = 0
 text = "Set"
+metadata/_edit_lock_ = true
 
 [node name="Shop" parent="." instance=ExtResource("14_8fbvn")]
 unique_name_in_owner = true
@@ -256,3 +268,4 @@ visible = false
 
 [node name="Tooltip" parent="." instance=ExtResource("16_8fbvn")]
 unique_name_in_owner = true
+visible = false

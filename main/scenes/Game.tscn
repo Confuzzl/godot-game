@@ -34,6 +34,7 @@ offset_right = 960.0
 offset_bottom = 540.0
 texture = ExtResource("2_s0nni")
 expand_mode = 1
+metadata/_edit_lock_ = true
 
 [node name="Machine" parent="." instance=ExtResource("4_kiw3p")]
 unique_name_in_owner = true
