@@ -13,6 +13,8 @@ public partial class Tooltip : PanelContainer
 	public Tooltip()
 	{
 		ZIndex = 1;
+
+		VisibilityChanged += () => ProcessMode = Visible ? ProcessModeEnum.Always : ProcessModeEnum.Disabled;
 	}
 
 	public override void _Process(double delta)
@@ -31,6 +33,5 @@ public partial class Tooltip : PanelContainer
 			text.Text += description;
 		Size = Vector2.Zero;
 		Show();
-
 	}
 }

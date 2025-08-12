@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://d0desm2406035"]
+[gd_scene load_steps=18 format=3 uid="uid://d0desm2406035"]
 
 [ext_resource type="Script" uid="uid://bsr77ow8b0s6l" path="res://src/gui/Gui.cs" id="1_q7530"]
 [ext_resource type="Texture2D" uid="uid://bdb5aj0yr0q7x" path="res://assets/bg/grid.png" id="3_womn8"]
@@ -16,10 +16,15 @@
 [ext_resource type="PackedScene" uid="uid://c3xu3xmlw34cu" path="res://scenes/Shop.tscn" id="14_8fbvn"]
 [ext_resource type="PackedScene" uid="uid://by3scwmp2lohy" path="res://scenes/Stats.tscn" id="15_ajyu1"]
 [ext_resource type="PackedScene" uid="uid://b0ld8ojgewjl1" path="res://scenes/Tooltip.tscn" id="16_8fbvn"]
+[ext_resource type="Script" uid="uid://b2vi8x1eo1t2y" path="res://src/TestButton.cs" id="17_ajyu1"]
 
-[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("Shop", "Stats", "Settings", "Characters", "Items", "Tooltip")]
+[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("TicketLabel", "TokenLabel", "RoundLabel", "Shop", "Stats", "Settings", "Characters", "Items", "Tooltip")]
+process_mode = 3
 follow_viewport_enabled = true
 script = ExtResource("1_q7530")
+TicketLabel = NodePath("TicketBox/TicketCount")
+TokenLabel = NodePath("Screen/TokenCount")
+RoundLabel = NodePath("Screen/RoundCount")
 Shop = NodePath("Shop")
 Stats = NodePath("Stats")
 Settings = NodePath("Settings")
@@ -62,23 +67,7 @@ offset_right = 43.0
 offset_bottom = 40.0
 texture = ExtResource("5_u3xxf")
 
-[node name="Characters" parent="." instance=ExtResource("6_u3xxf")]
-unique_name_in_owner = true
-offset_left = 60.0
-offset_top = 120.0
-offset_right = 240.0
-offset_bottom = 240.0
-script = ExtResource("7_cekc3")
-
-[node name="Items" parent="." instance=ExtResource("6_u3xxf")]
-unique_name_in_owner = true
-offset_left = 60.0
-offset_top = 300.0
-offset_right = 240.0
-offset_bottom = 420.0
-script = ExtResource("8_1i4pd")
-
-[node name="ScoreBar" type="TextureProgressBar" parent="."]
+[node name="ScoreBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("MultiplierLabel", "ScoreLabel", "GoalLabel")]
 unique_name_in_owner = true
 offset_left = 300.0
 offset_right = 660.0
@@ -92,6 +81,9 @@ texture_progress = ExtResource("11_vjrnn")
 texture_progress_offset = Vector2(15, 5)
 tint_progress = Color(0, 1, 0.0625, 1)
 script = ExtResource("12_8fbvn")
+MultiplierLabel = NodePath("Multiplier")
+ScoreLabel = NodePath("RoundScore")
+GoalLabel = NodePath("GoalScore")
 metadata/_edit_lock_ = true
 
 [node name="RoundScore" type="Label" parent="ScoreBar"]
@@ -231,6 +223,7 @@ offset_top = 120.0
 offset_right = 900.0
 offset_bottom = 180.0
 focus_mode = 0
+toggle_mode = true
 text = "Shop"
 metadata/_edit_lock_ = true
 
@@ -241,6 +234,7 @@ offset_top = 240.0
 offset_right = 900.0
 offset_bottom = 300.0
 focus_mode = 0
+toggle_mode = true
 text = "Stats"
 metadata/_edit_lock_ = true
 
@@ -251,6 +245,7 @@ offset_top = 360.0
 offset_right = 900.0
 offset_bottom = 420.0
 focus_mode = 0
+toggle_mode = true
 text = "Set"
 metadata/_edit_lock_ = true
 
@@ -266,6 +261,31 @@ visible = false
 unique_name_in_owner = true
 visible = false
 
+[node name="Characters" parent="." instance=ExtResource("6_u3xxf")]
+unique_name_in_owner = true
+offset_left = 60.0
+offset_top = 120.0
+offset_right = 240.0
+offset_bottom = 240.0
+script = ExtResource("7_cekc3")
+
+[node name="Items" parent="." instance=ExtResource("6_u3xxf")]
+unique_name_in_owner = true
+offset_left = 60.0
+offset_top = 300.0
+offset_right = 240.0
+offset_bottom = 420.0
+script = ExtResource("8_1i4pd")
+
 [node name="Tooltip" parent="." instance=ExtResource("16_8fbvn")]
 unique_name_in_owner = true
 visible = false
+
+[node name="Button" type="Button" parent="."]
+visible = false
+offset_left = 422.0
+offset_top = 159.0
+offset_right = 503.0
+offset_bottom = 210.0
+text = "lalal"
+script = ExtResource("17_ajyu1")

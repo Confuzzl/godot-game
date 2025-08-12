@@ -8,13 +8,16 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 960.0
 offset_bottom = 540.0
+mouse_filter = 2
 script = ExtResource("1_imwls")
 
 [node name="grid" type="TextureRect" parent="."]
+visible = false
 texture_filter = 1
 layout_mode = 0
 offset_right = 960.0
 offset_bottom = 540.0
+mouse_filter = 2
 texture = ExtResource("2_pw1u6")
 
 [node name="ColorRect" type="ColorRect" parent="."]

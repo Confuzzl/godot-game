@@ -19,6 +19,15 @@ public sealed class ThingGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(provider, Execute);
     }
 
+    private static void MaybeSet<AttrT, T>(AttributeData attr, ref T field)
+    {
+        string fullname = attr.AttributeClass!.ToDisplayString();
+        if (fullname == typeof(AttrT).FullName)
+        {
+            field = (T)attr.ConstructorArguments[0].Value!;
+        }
+    }
+
     private static void Execute(SourceProductionContext source, GeneratorSyntaxContext syntax)
     {
         var klassSyntax = (ClassDeclarationSyntax)syntax.Node;
@@ -37,18 +46,20 @@ public sealed class ThingGenerator : IIncrementalGenerator
             string tooltip = string.Concat(thingName.Select(
                 (x, i) => ((i > 0 && char.IsUpper(x)) ? " " : "") + x.ToString()));
             string description = "no description";
+            uint price = 0;
             ITypeSymbol? trigger = null;
+
 
             foreach (AttributeData attr in thing.GetAttributes())
             {
-                string fullname = attr.AttributeClass!.ToDisplayString();
-                if (fullname == typeof(Thing::ResourceName).FullName)
-                    textureName = (string)attr.ConstructorArguments[0].Value!;
-                if (fullname == typeof(Thing::TooltipName).FullName)
-                    tooltip = (string)attr.ConstructorArguments[0].Value!;
-                if (fullname == typeof(Thing::TooltipDescription).FullName)
-                    description = (string)attr.ConstructorArguments[0].Value!;
-                if (attr.AttributeClass.MetadataName == typeof(Thing::TriggeredBy<object>).GetGenericTypeDefinition().Name)
+                //string fullname = attr.AttributeClass!.ToDisplayString();
+
+                MaybeSet<Thing::ResourceName, string>(attr, ref textureName);
+                MaybeSet<Thing::TooltipName, string>(attr, ref tooltip);
+                MaybeSet<Thing::TooltipDescription, string>(attr, ref description);
+                MaybeSet<Thing::Price, uint>(attr, ref price);
+
+                if (attr.AttributeClass!.MetadataName == typeof(Thing::TriggeredBy<object>).GetGenericTypeDefinition().Name)
                     trigger = attr.AttributeClass.TypeArguments[0];
             }
 
@@ -57,6 +68,7 @@ public sealed class ThingGenerator : IIncrementalGenerator
                     {
                         public {{thingName}}() : base("{{textureName}}", {{(trigger is null ? "null" : $"Triggers.{Util.CapsUnderscore(trigger.Name)}")}})
                         {
+                            Price = {{price}};
                             TooltipName = "{{tooltip}}";
                             Description = "{{description}}";
                         }

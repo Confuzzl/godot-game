@@ -80,7 +80,7 @@ public partial class Game : Node2D
         set
         {
             field = value;
-            scoreBar.GetNode<Label>("%RoundScore").Text = Util.ToCompactString(value);
+            scoreBar.ScoreLabel.Text = Util.ToCompactString(value);
             scoreBar.Set((Goal is null) ? 0 : Util.DivideBigInteger(value, Goal.Value));
         }
     }
@@ -90,7 +90,7 @@ public partial class Game : Node2D
         private set
         {
             field = value;
-            scoreBar.GetNode<Label>("%GoalScore").Text = value is BigInteger n ? Util.ToCompactString(n) : "-";
+            scoreBar.GoalLabel.Text = value is BigInteger n ? Util.ToCompactString(n) : "-";
         }
     }
     public BigInteger TotalRoundValue { get; private set; } = 0;
@@ -126,6 +126,14 @@ public partial class Game : Node2D
         {
             field = Math.Min(MAX_TICKETS, value);
             Gui.TicketLabel.Text = $"{field}";
+            OnTicketChange();
+        }
+    }
+    private void OnTicketChange()
+    {
+        foreach (var slot in Gui.Shop.Characters)
+        {
+            //slot.GameNode.OnThingChange
         }
     }
 
@@ -139,15 +147,8 @@ public partial class Game : Node2D
         instance = this;
         GD.Print("Game Start");
 
-        // GD.Print(DisplayServer.ScreenGetSize());
-
         // GD.Print(BigInteger.Parse("1,000", NumberStyles.AllowThousands));
-
-        //Tickets = 100;
     }
-
-    //public void ConsumeCapsule(Capsule cap) { Score += cap.Value; }
-    //public Godot.Vector2 MousePosition() => GetViewport().GetMousePosition();
 
     private void ResetRound()
     {
@@ -179,7 +180,6 @@ public partial class Game : Node2D
         scoreBar = Gui.GetNode<ScoreBar>("%ScoreBar");
 
         Gui.Settings.Music.Value = 0;
-
 
         Round = 0;
         Tickets = 0;
@@ -214,7 +214,6 @@ public partial class Game : Node2D
     {
         if (@event is InputEventMouseButton me)
         {
-
             if (me.Pressed && me.ButtonIndex == MouseButton.WheelUp)
             {
                 Score += 1;
@@ -229,10 +228,7 @@ public partial class Game : Node2D
                     if (Gui.ActiveWindow is null)
                         GetTree().Quit();
                     else
-                    {
-                        GetTree().Paused = false;
                         Gui.CloseWindow();
-                    }
                     break;
                 case Key.Space:
                     if (Tokens > 0 && Machine.SendIt()) Tokens -= 1;

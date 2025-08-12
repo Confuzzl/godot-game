@@ -9,7 +9,6 @@ namespace Matcha.Things;
 
 public abstract partial class ThingContainerBase : Control
 {
-
 	public abstract Vector2 DefaultPositionOfSlot(uint i);
 }
 
@@ -24,7 +23,7 @@ public abstract partial class ThingContainer<T, SlotType>(uint numSlots) : Thing
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
-public partial class InventoryContainer<T> : ThingContainer<T, InventorySlot<T>> where T : Thing
+public abstract partial class InventoryContainer<T> : ThingContainer<T, InventorySlot<T>> where T : Thing
 {
 	private static readonly Vector2 SLOT_OFFSET = new(9, 8);
 	public override Vector2 DefaultPositionOfSlot(uint i) => SLOT_OFFSET +
@@ -75,32 +74,23 @@ public partial class InventoryContainer<T> : ThingContainer<T, InventorySlot<T>>
 		TriggerParticles = GetNode<GpuParticles2D>("%SlotTriggerParticles");
 		TriggerParticles.Amount = 1;
 
-		var slotContainer = GetNode<Node2D>("%Slots");
+		var slotContainer = GetNode<Control>("%Slots");
 		for (var i = 0u; i < slots.Length; i++)
 		{
-			var placeholder = slotContainer.GetNode<GameSlot>($"%s{i}");
+			var placeholder = slotContainer.GetNode<GameInventorySlot>($"%s{i}");
 
 			Debug.Assert(placeholder.Size == ThingSlotBase.SIZE, "inconsistent thingslot size");
-			Debug.Assert(placeholder.Position == DefaultPositionOfSlot(i), "inconsistent thingslot position");
 
-			//var slot = new InventorySlot<T>(i, this, placeholder.Position, placeholder.Size)
-			//{
-			//    MouseFilter = Control.MouseFilterEnum.Pass,
-			//    Locked = i >= OpenSlots
-			//};
-			var slot = new InventorySlot<T>(i, this, placeholder)
-			{
-				Locked = i >= OpenSlots
-			};
-
-			//slot.PivotOffset = slot.Size / 2;
+			var slot = new InventorySlot<T>(i, this, placeholder);
 
 			slots[i] = slot;
 		}
 	}
+
+	public uint LockedSlotPrice = 5;
 }
 
-public partial class ShopContainer<T>() : ThingContainer<T, ShopSlot<T>>(6) where T : Things.Thing
+public abstract partial class ShopContainer<T>() : ThingContainer<T, ShopSlot<T>>(6) where T : Thing
 {
 
 	private static readonly Vector2 SLOT_OFFSET = new(0, 0);
@@ -116,14 +106,7 @@ public partial class ShopContainer<T>() : ThingContainer<T, ShopSlot<T>>(6) wher
 			Debug.Assert(placeholder.Size == ThingSlotBase.SIZE, "inconsistent thingslot size");
 			Debug.Assert(placeholder.Position == DefaultPositionOfSlot(i), "inconsistent thingslot position");
 
-			//var priceContainer = placeholder.GetNode<HBoxContainer>("%Container");
-			//var priceLabel = priceContainer.GetNode<Label>("%Price");
-			//var slot = new ShopSlot<T>(i, this, placeholder.Position, placeholder.Size, priceContainer, priceLabel)
-			//{
-			//    MouseFilter = Control.MouseFilterEnum.Pass
-			//};
 			var slot = new ShopSlot<T>(i, this, placeholder);
-
 			slots[i] = slot;
 		}
 	}

@@ -18,28 +18,31 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 		get;
 		set
 		{
-			field = value;
-			if (value) TriggerBase?.Things.Add(this);
+			if (field = value) TriggerBase?.Things.Add(this);
 			else TriggerBase?.Things.Remove(this);
 		}
 	}
-	public uint Price { get; set; } = 4;
+	public uint Price { get; set; }
+	public const double SELL_MULTIPLIER = 0.5;
+	public uint SellPrice => (uint)Math.Max(1, Price * SELL_MULTIPLIER);
 	public bool Upgraded { get; set; }
 
 	public string TooltipName { get; init; }
 	public string Description { get; init; }
 
 
-	public Triggers.Base? TriggerBase { get; } = triggerBase;
+	public Triggers.Base? TriggerBase => triggerBase;
 
 	public void Trigger()
 	{
-		Debug.Assert(Active && Slot is not null, "Thing triggered when inactive or null slot");
+		Debug.Assert(Active, "Thing isn't active");
+		Debug.Assert(Slot is not null, "Slot is null");
+		Debug.Assert(Slot is IInventorySlot, "Slot isn't an IInventorySlot");
 		((IInventorySlot)Slot).Trigger();
 		TriggerImpl();
 	}
 
-	protected virtual ImmutableArray<Vector2> TriggerTargets() => [];
+	protected virtual ImmutableArray<Vector2> TriggerTargets => [];
 	protected virtual void TriggerImpl() { }
 }
 
@@ -50,7 +53,8 @@ public abstract partial class Character(string name, Triggers.Base triggerBase) 
 		ResourceName("chiikawa2"),
 		TooltipName("evil!"),
 		TooltipDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
-		TriggeredBy<Triggers.OnRestock>
+		TriggeredBy<Triggers.OnRestock>,
+		Price(4),
 	]
 	public partial class Chiikawa { protected override void TriggerImpl() { GD.Print("CHIIKAWA!"); } }
 

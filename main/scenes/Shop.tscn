@@ -31,6 +31,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 960.0
 offset_bottom = 540.0
+mouse_filter = 1
 script = ExtResource("1_rgcs7")
 Characters = NodePath("Main/GridContainer/CharacterContainer/Characters")
 Items = NodePath("Main/GridContainer/ItemContainer/Items")
@@ -41,6 +42,7 @@ texture_filter = 1
 layout_mode = 2
 offset_right = 960.0
 offset_bottom = 540.0
+mouse_filter = 2
 texture = ExtResource("2_ec5oe")
 
 [node name="Main" type="VBoxContainer" parent="."]

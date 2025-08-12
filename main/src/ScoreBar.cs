@@ -29,14 +29,13 @@ public partial class ScoreBar : TextureProgressBar
 		return RandomColor(n);
 	}
 
-	private const uint MAX_MULTIPLIER = 999;
+	private const uint MAX_MULTIPLIER = 9999;
 	public uint Multiplier { get; private set; } = 0;
-	private Label multiplierLabel;
+	[Export] public Label MultiplierLabel { get; private set; }
+	[Export] public Label ScoreLabel { get; private set; }
+	[Export] public Label GoalLabel { get; private set; }
 
-	public override void _Ready()
-	{
-		multiplierLabel = GetNode<Label>("%Multiplier");
-	}
+
 
 	public void Set(double proportion)
 	{
@@ -50,6 +49,6 @@ public partial class ScoreBar : TextureProgressBar
 
 		Multiplier = Math.Min(MAX_MULTIPLIER, currFull);
 
-		multiplierLabel.Text = Multiplier == 0 ? "" : $"{Multiplier}x";
+		MultiplierLabel.Text = Multiplier == 0 ? "" : $"{Multiplier}x";
 	}
 }

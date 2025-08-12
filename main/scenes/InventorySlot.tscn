@@ -1,0 +1,69 @@
+[gd_scene load_steps=5 format=3 uid="uid://cepa8o1phs6uj"]
+
+[ext_resource type="Script" uid="uid://dphljli7basnr" path="res://src/things/GameInventorySlot.cs" id="1_b3cg4"]
+[ext_resource type="Texture2D" uid="uid://cjlst8ew5fsq2" path="res://assets/gui/token.png" id="2_22k64"]
+
+[sub_resource type="FontVariation" id="FontVariation_b3cg4"]
+spacing_top = -8
+spacing_bottom = -6
+
+[sub_resource type="FontVariation" id="FontVariation_22k64"]
+spacing_top = -5
+spacing_bottom = -5
+
+[node name="Slot" type="TextureRect" node_paths=PackedStringArray("shopOverlay", "priceLabel", "shopButton")]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 50.0
+offset_bottom = 50.0
+script = ExtResource("1_b3cg4")
+shopOverlay = NodePath("ShopOverlay")
+priceLabel = NodePath("ShopOverlay/CenterContainer/VBoxContainer/Container/Price")
+shopButton = NodePath("ShopOverlay/CenterContainer/VBoxContainer/Button")
+
+[node name="ShopOverlay" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="ShopOverlay"]
+clip_contents = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ShopOverlay/CenterContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Container" type="HBoxContainer" parent="ShopOverlay/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="Token" type="TextureRect" parent="ShopOverlay/CenterContainer/VBoxContainer/Container"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_22k64")
+stretch_mode = 3
+
+[node name="Price" type="Label" parent="ShopOverlay/CenterContainer/VBoxContainer/Container"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_b3cg4")
+theme_override_font_sizes/font_size = 20
+text = "0"
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="ShopOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = SubResource("FontVariation_22k64")
+theme_override_font_sizes/font_size = 14
+text = "SELL"
+clip_text = true
