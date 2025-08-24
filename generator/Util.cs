@@ -32,6 +32,8 @@ public static class Util
     }
     public static string CapsUnderscore(string str) => string.Concat(str.Select(
                 (x, i) => ((i > 0 && char.IsUpper(x)) ? "_" : "") + x.ToString().ToUpperInvariant()));
+    public static string LowerUnderscore(string str) => string.Concat(str.Select(
+                (x, i) => ((i > 0 && char.IsUpper(x)) ? "_" : "") + x.ToString().ToLowerInvariant()));
 
     public static IncrementalValuesProvider<GeneratorSyntaxContext>
         ClassesWithAttribute<T>(IncrementalGeneratorInitializationContext context) =>
@@ -44,6 +46,8 @@ public static class Util
     private static GeneratorSyntaxContext? ClassDeclarationTransform<T>(GeneratorSyntaxContext context)
     {
         var klass = (ClassDeclarationSyntax)context.Node;
+
+
         foreach (var attrList in klass.AttributeLists)
         {
             foreach (var attr in attrList.Attributes)

@@ -19,9 +19,6 @@ public partial class Claw : Node2D
 			angle = value;
 			pivotL.RotationDegrees = +angle;
 			pivotR.RotationDegrees = -angle;
-			// var rect = Box();
-			// area.Position = new(0, rect.Size.Y / 2);
-			// bounds.Size = rect.Size;
 		}
 	}
 	private Control pivotL, pivotR;

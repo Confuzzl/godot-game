@@ -5,29 +5,38 @@ using System.Numerics;
 namespace Matcha;
 public partial class Machine : Node2D
 {
-	public enum State { NONE, RESTOCKING, IN_GAME, OUT_OF_TOKENS, TOTAL_CLEAR }
-	public State MyState
+	public enum StateEnum { LIMBO, RESTOCKING, IN_ROUND, OUT_OF_TOKENS, TOTAL_CLEAR }
+	public StateEnum State
 	{
 		get;
 		private set
 		{
 			if (field != value)
 			{
+				// limbo to any other gamestate
+				if (field == StateEnum.LIMBO)
+				{
+					Game.INSTANCE.Gui.ShopButton.Disabled = true;
+					startButton.Disabled = true;
+				}
+
 				switch (value)
 				{
-					case State.NONE:
+					case StateEnum.LIMBO:
+						Game.INSTANCE.Gui.ShopButton.Disabled = false;
+						startButton.Disabled = false;
 						break;
-					case State.RESTOCKING:
-						Restock();
+					case StateEnum.RESTOCKING:
+						Restocking();
 						break;
-					case State.IN_GAME:
-						InGame();
+					case StateEnum.IN_ROUND:
+						InRound();
 						break;
-					case State.OUT_OF_TOKENS:
+					case StateEnum.OUT_OF_TOKENS:
 						OutOfTokens();
 						RoundEnd();
 						break;
-					case State.TOTAL_CLEAR:
+					case StateEnum.TOTAL_CLEAR:
 						TotalClear();
 						RoundEnd();
 						break;
@@ -35,23 +44,19 @@ public partial class Machine : Node2D
 			}
 			field = value;
 		}
-	} = State.NONE;
-
-	[Signal]
-	public delegate void OnRestockEventHandler();
-	[Signal]
-	public delegate void OnInGameEventHandler();
-	[Signal]
-	public delegate void OnRoundEndEventHandler();
-	[Signal]
-	public delegate void OnOutOfTokensEventHandler();
-	[Signal]
-	public delegate void OnTotalClearEventHandler();
+	} = StateEnum.LIMBO;
 
 
-	private Timer restockToGameTimer, endToRestockTimer;
+	[Signal] public delegate void OnRestockEventHandler();
+	[Signal] public delegate void OnInRoundEventHandler();
+	[Signal] public delegate void OnRoundEndEventHandler();
+	[Signal] public delegate void OnOutOfTokensEventHandler();
+	[Signal] public delegate void OnTotalClearEventHandler();
 
-	partial void ReadyState()
+
+	private Timer restockToGameTimer, endToLimboTimer;
+
+	private void ReadyState()
 	{
 		restocker.OnRestockEnd += () =>
 		{
@@ -66,35 +71,36 @@ public partial class Machine : Node2D
 		};
 		restockToGameTimer.Timeout += () =>
 		{
-			MyState = State.IN_GAME;
+			State = StateEnum.IN_ROUND;
 		};
 		AddChild(restockToGameTimer);
 
-		endToRestockTimer = new()
+		endToLimboTimer = new()
 		{
 			WaitTime = 1,
 			OneShot = true
 		};
-		endToRestockTimer.Timeout += () =>
+		endToLimboTimer.Timeout += () =>
 		{
-			MyState = State.RESTOCKING;
+			//State = StateEnum.RESTOCKING;
+			State = StateEnum.LIMBO;
 		};
-		AddChild(endToRestockTimer);
+		AddChild(endToLimboTimer);
 
 		Claw.OnDepositFinish += () =>
 		{
 			if (BallCount == 0)
 			{
-				MyState = State.TOTAL_CLEAR;
+				State = StateEnum.TOTAL_CLEAR;
 			}
 			else if (Game.INSTANCE.Tokens == 0)
 			{
-				MyState = State.OUT_OF_TOKENS;
+				State = StateEnum.OUT_OF_TOKENS;
 			}
 		};
 	}
 
-	private void Restock()
+	private void Restocking()
 	{
 		EmitSignal(SignalName.OnRestock);
 
@@ -107,9 +113,9 @@ public partial class Machine : Node2D
 
 		restocker.Start();
 	}
-	private void InGame()
+	private void InRound()
 	{
-		EmitSignal(SignalName.OnInGame);
+		EmitSignal(SignalName.OnInRound);
 
 		chuteEnd.ProcessMode = ProcessModeEnum.Always;
 		chuteCheck.ProcessMode = ProcessModeEnum.Always;
@@ -125,8 +131,8 @@ public partial class Machine : Node2D
 	{
 		EmitSignal(SignalName.OnRoundEnd);
 
-		Claw.Awake = false;
-		endToRestockTimer.Start();
+		//Claw.Awake = false;
+		endToLimboTimer.Start();
 	}
 	private void OutOfTokens()
 	{

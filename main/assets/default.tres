@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dr5q30jflvsl7"]
+
+[sub_resource type="FontVariation" id="FontVariation_cx1ym"]
+baseline_offset = 0.06
+
+[resource]
+default_font = SubResource("FontVariation_cx1ym")
+default_font_size = 14

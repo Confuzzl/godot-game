@@ -1,36 +1,60 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxj0jjputx37l"]
+[gd_scene load_steps=5 format=3 uid="uid://bxj0jjputx37l"]
 
-[ext_resource type="Texture2D" uid="uid://cjlst8ew5fsq2" path="res://assets/gui/token.png" id="1_0lmm0"]
 [ext_resource type="Script" uid="uid://c35sv3160a7et" path="res://src/things/GameShopSlot.cs" id="1_mu5sn"]
+[ext_resource type="Texture2D" uid="uid://8mwyxri1k4ub" path="res://assets/gui/shop_label.png" id="2_6urcc"]
+[ext_resource type="Texture2D" uid="uid://byjf8msjo3enp" path="res://assets/gui/ticket.png" id="2_mu5sn"]
+
+[sub_resource type="FontVariation" id="FontVariation_mu5sn"]
+spacing_top = -2
+spacing_bottom = -8
 
 [node name="Slot" type="TextureRect" node_paths=PackedStringArray("Container", "Label")]
 custom_minimum_size = Vector2(50, 50)
 offset_right = 50.0
 offset_bottom = 50.0
 script = ExtResource("1_mu5sn")
-Container = NodePath("Container")
-Label = NodePath("Container/Price")
+Container = NodePath("Control")
+Label = NodePath("Control/Container/Price")
 
-[node name="Container" type="HBoxContainer" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_top = 50.0
 offset_right = 50.0
-offset_bottom = 28.0
-grow_vertical = 0
+offset_bottom = 75.0
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6urcc")
+
+[node name="Container" type="HBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -10.0
+offset_right = 18.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 1
 
-[node name="Token" type="TextureRect" parent="Container"]
-unique_name_in_owner = true
+[node name="Ticket" type="TextureRect" parent="Control/Container"]
 layout_mode = 2
-texture = ExtResource("1_0lmm0")
+texture = ExtResource("2_mu5sn")
 stretch_mode = 3
 
-[node name="Price" type="Label" parent="Container"]
-unique_name_in_owner = true
+[node name="Price" type="Label" parent="Control/Container"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "0"
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = SubResource("FontVariation_mu5sn")
+theme_override_font_sizes/font_size = 28
+text = "9"
 vertical_alignment = 1

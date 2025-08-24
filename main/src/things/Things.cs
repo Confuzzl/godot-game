@@ -1,5 +1,4 @@
 using Godot;
-//using Matcha.Generator.Attributes;
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -7,10 +6,15 @@ using System.Diagnostics;
 namespace Matcha.Things;
 
 using Generator.Attributes.Thing;
+using System.Collections.Generic;
 
 
-public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
+[Base]
+public abstract partial class Thing(Texture2D texture, Triggers.Base triggerBase)
 {
+	public static readonly List<Func<Character>> CHARACTER_CONSTRUCTORS = [];
+	public static readonly List<Func<Item>> ITEM_CONSTRUCTORS = [];
+
 	public Texture2D Texture { get; init; } = texture;
 	public ThingSlotBase? Slot { get; set; }
 	public bool Active
@@ -46,7 +50,7 @@ public abstract class Thing(Texture2D texture, Triggers.Base triggerBase)
 	protected virtual void TriggerImpl() { }
 }
 
-[BaseType]
+[CharacterBase]
 public abstract partial class Character(string name, Triggers.Base triggerBase) : Thing(Util.GetTexture($"characters/{name}.png"), triggerBase)
 {
 	[
@@ -63,13 +67,28 @@ public abstract partial class Character(string name, Triggers.Base triggerBase) 
 
 	[TriggeredBy<Triggers.OnMerge>]
 	public partial class Usagi;
+
+	public partial class Kurimanju;
+
+	public partial class Momonga;
+
+	public partial class Rakko;
 }
 
-[BaseType]
+[ItemBase]
 public partial class Item(string name, Triggers.Base triggerBase) : Thing(Util.GetTexture($"items/{name}.png"), triggerBase)
 {
-	//[TriggeredBy<Triggers.OnPassRoundGoal>]
 	public partial class Matcha;
-	//[TriggeredBy<Triggers.OnRestock>]
+
 	public partial class Boba;
+
+	public partial class Catnip;
+
+	public partial class String;
+
+	public partial class MouseToy;
+
+	public partial class DinoNugget;
+
+	public partial class ChoccyMilk;
 }

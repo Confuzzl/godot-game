@@ -20,6 +20,11 @@ public partial class Gui : CanvasLayer
 	[Export] public Label TokenLabel { get; private set; }
 	[Export] public Label RoundLabel { get; private set; }
 
+	[ExportGroup("Buttons")]
+	[Export] public Button ShopButton { get; private set; }
+	[Export] public Button StatsButton { get; private set; }
+	[Export] public Button SettingsButton { get; private set; }
+
 	[ExportGroup("Windows")]
 	[Export] public Shop Shop { get; private set; }
 	[Export] public Stats Stats { get; private set; }
@@ -31,6 +36,8 @@ public partial class Gui : CanvasLayer
 
 	[ExportGroup("")]
 	[Export] public Tooltip Tooltip { get; private set; }
+	[Export] public Control RoundPopup { get; private set; }
+	[Export] public Label RoundPopupLabel { get; private set; }
 
 	public override void _Ready()
 	{
@@ -61,17 +68,19 @@ public partial class Gui : CanvasLayer
 			button.Pressed += press(window);
 		}
 
-		buttonSetup(GetNode<Button>("%ShopButton"), Shop);
-		buttonSetup(GetNode<Button>("%StatsButton"), Stats);
-		buttonSetup(GetNode<Button>("%SettingsButton"), Settings);
+
+
+		buttonSetup(ShopButton, Shop);
+		buttonSetup(StatsButton, Stats);
+		buttonSetup(SettingsButton, Settings);
 	}
 	public override void _Process(double delta)
 	{
-		var label = GetNode<Label>("Label");
-		label.Text = MSG;
+		var label = GetNode<Label>("Main/Label");
+		//label.Text = MSG;
 		//label.Text = $"{ThingSlotBase.CURRENT_DRAGGING?.Index ?? uint.MaxValue} {ThingSlotBase.HOVERING?.Index ?? uint.MaxValue}";
 		//label.Text = $"{ActiveWindow}";
-		//label.Text = $"{Game.INSTANCE.Machine.MyState} {Game.INSTANCE.Machine.Claw.MyState}";
+		label.Text = $"{Game.INSTANCE.Machine.State} {Game.INSTANCE.Machine.Claw.MyState}";
 	}
 
 
@@ -80,6 +89,9 @@ public partial class Gui : CanvasLayer
 		if (ActiveWindow is null) return;
 		CloseWindow(ActiveWindow);
 		ActiveWindow = null;
+		ShopButton.ButtonPressed = false;
+		StatsButton.ButtonPressed = false;
+		SettingsButton.ButtonPressed = false;
 	}
 	private void OpenWindow(Window window)
 	{

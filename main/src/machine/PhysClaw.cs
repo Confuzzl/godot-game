@@ -22,14 +22,14 @@ public partial class PhysClaw : Node2D
 
 	public bool Awake { get; set; }
 
-	public float DropChance { get; private set; } = 0.0f;
+	public float DropChance { get; set; } = 0.5f;
 
-	public double timeSinceGrab = 0;
-	public double dropTime = 0;
+	private double timeSinceGrab = 0;
+	private double dropTime = 0;
 
 
-	public enum State { PACING_LEFT, PACING_RIGHT, DOWN, GRABBING, UP_VERTICAL, UP_HORIZONTAL, DEPOSITING }
-	public State MyState
+	public enum StateEnum { PACING_LEFT, PACING_RIGHT, DOWN, GRABBING, UP_VERTICAL, UP_HORIZONTAL, DEPOSITING }
+	public StateEnum MyState
 	{
 		get;
 		private set
@@ -38,20 +38,20 @@ public partial class PhysClaw : Node2D
 			{
 				switch (value)
 				{
-					case State.GRABBING:
+					case StateEnum.GRABBING:
 						OnStateGrabbing();
 						break;
-					case State.UP_VERTICAL:
+					case StateEnum.UP_VERTICAL:
 						OnStateUpVertical();
 						break;
-					case State.DEPOSITING:
+					case StateEnum.DEPOSITING:
 						OnStateDepositing();
 						break;
 				}
 			}
 			field = value;
 		}
-	} = State.PACING_RIGHT;
+	} = StateEnum.PACING_RIGHT;
 
 	private float speed = 200;
 	[Export] private Timer grabTimer, depositTimer;
@@ -78,15 +78,15 @@ public partial class PhysClaw : Node2D
 		jointR.AngularLimitUpper = Mathf.DegToRad(+INNER_ANGLE);
 
 		grabTimer.OneShot = true;
-		grabTimer.WaitTime = 2;
-		grabTimer.Timeout += () => { MyState = State.UP_VERTICAL; };
+		grabTimer.WaitTime = 1;
+		grabTimer.Timeout += () => { MyState = StateEnum.UP_VERTICAL; };
 
 		depositTimer.OneShot = true;
 		depositTimer.WaitTime = 1;
 		depositTimer.Timeout += () =>
 		{
 			EmitSignalOnDepositFinish();
-			MyState = State.PACING_LEFT;
+			MyState = StateEnum.PACING_LEFT;
 			armL.CollisionLayer = Game.CLAW_LAYER;
 			armR.CollisionLayer = Game.CLAW_LAYER;
 		};
@@ -103,10 +103,10 @@ public partial class PhysClaw : Node2D
 	public delegate void OnSendEventHandler();
 	public bool SendIt()
 	{
-		if (!Awake || (MyState != State.PACING_LEFT && MyState != State.PACING_RIGHT))
+		if (!Awake || (MyState != StateEnum.PACING_LEFT && MyState != StateEnum.PACING_RIGHT))
 			return false;
 		EmitSignalOnSend();
-		MyState = State.DOWN;
+		MyState = StateEnum.DOWN;
 
 		return true;
 	}
@@ -169,19 +169,19 @@ public partial class PhysClaw : Node2D
 		const float LOOSEN = +100_000;
 		const float CLOSE = -500_000;
 
-		(Vector2 offset, State state, float torque) next = MyState switch
+		(Vector2 offset, StateEnum state, float torque) next = MyState switch
 		{
-			State.PACING_LEFT => (new(-speed, 0), (Position.X < TRACK_START) ? State.PACING_RIGHT : MyState, 0.0f),
-			State.PACING_RIGHT => (new(+speed, 0), (Position.X > TRACK_END) ? State.PACING_LEFT : MyState, 0.0f),
-			State.DOWN => (new(0, +speed), (CapsuleDeepCheck() || Position.Y > -(Machine.FRONT_HEIGHT + 60)) ? State.GRABBING : MyState, OPEN),
-			State.GRABBING => (new(), MyState, CLOSE),
-			State.UP_VERTICAL => (new(0, -speed), (Position.Y < -START_HEIGHT) ? State.UP_HORIZONTAL : MyState, CLOSE),
-			State.UP_HORIZONTAL => (new(+speed, 0), (Position.X > Machine.CHUTE_END_X_OFFSET) ? State.DEPOSITING : MyState, CLOSE),
-			State.DEPOSITING => (new(), MyState, OPEN),
+			StateEnum.PACING_LEFT => (new(-speed, 0), (Position.X < TRACK_START) ? StateEnum.PACING_RIGHT : MyState, 0.0f),
+			StateEnum.PACING_RIGHT => (new(+speed, 0), (Position.X > TRACK_END) ? StateEnum.PACING_LEFT : MyState, 0.0f),
+			StateEnum.DOWN => (new(0, +speed), (CapsuleDeepCheck() || Position.Y > -(Machine.FRONT_HEIGHT + 60)) ? StateEnum.GRABBING : MyState, OPEN),
+			StateEnum.GRABBING => (new(), MyState, CLOSE),
+			StateEnum.UP_VERTICAL => (new(0, -speed), (Position.Y < -START_HEIGHT) ? StateEnum.UP_HORIZONTAL : MyState, CLOSE),
+			StateEnum.UP_HORIZONTAL => (new(+speed, 0), (Position.X > Machine.CHUTE_END_X_OFFSET) ? StateEnum.DEPOSITING : MyState, CLOSE),
+			StateEnum.DEPOSITING => (new(), MyState, OPEN),
 			_ => throw new NotImplementedException(),
 		};
 
-		if (MyState == State.UP_VERTICAL || MyState == State.UP_HORIZONTAL)
+		if (MyState == StateEnum.UP_VERTICAL || MyState == StateEnum.UP_HORIZONTAL)
 		{
 			timeSinceGrab += delta;
 			foreach (var timer in Triggers.TIMERS)

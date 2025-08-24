@@ -32,6 +32,12 @@ window/vsync/vsync_mode=0
 
 project/assembly_name="matcha"
 
+[gui]
+
+theme/custom="uid://dr5q30jflvsl7"
+theme/custom_font="uid://c78np6crfdh25"
+theme/default_font_antialiasing=0
+
 [input]
 
 escape={

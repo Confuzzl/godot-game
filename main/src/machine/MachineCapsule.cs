@@ -16,22 +16,21 @@ public partial class Machine : Node2D
 
 	private readonly SortedList<int, Capsule> capsules = [];
 	public uint BallCount => (uint)capsules.Count;
-	public BigInteger MinCapsuleValue => capsules.Values.MinBy(cap => cap.Value).Value;
+	public BigInteger MinCapsuleValue => capsules.Values.Min(cap => cap.Value);
 
 	private ChuteEnd chuteEnd;
-	private Area2D chuteCheck;
-	private Area2D mergeCheck;
 
-	private Restocker restocker;
+	[ExportGroup("")]
+	[Export] private Restocker restocker;
 
-	partial void ReadyCapsule()
+	[ExportGroup("Checks")]
+	[Export] private Area2D chuteCheck, mergeCheck;
+
+	private void ReadyCapsule()
 	{
-		restocker = GetNode<Restocker>("%Restocker");
-
 		chuteEnd = new ChuteEnd(new(1.75f * Game.UNIT, 0.1f * Game.UNIT)) { Position = new(CHUTE_END_X_OFFSET, -1 * Game.UNIT) };
 		AddChild(chuteEnd);
 
-		chuteCheck = GetNode<Area2D>("%ChuteCheck");
 		chuteCheck.Position = new(CHUTE_END_X_OFFSET, -FRONT_HEIGHT);
 		chuteCheck.BodyEntered += (node) =>
 		{
@@ -43,7 +42,6 @@ public partial class Machine : Node2D
 			}
 		};
 
-		mergeCheck = GetNode<Area2D>("%MergeCheck");
 		mergeCheck.Position = new(mergeCheck.Position.X, -(FRONT_HEIGHT + CHUTE_SEPARATOR_HEIGHT + Game.UNIT));
 		mergeCheck.CollisionMask = Game.BALL_LAYER;
 		mergeCheck.BodyEntered += (node) => { if (node is Capsule cap) Merge(cap); };
@@ -69,9 +67,7 @@ public partial class Machine : Node2D
 		var capsule = capsuleScene.Instantiate<Capsule>();
 		capsule.Value = value;
 		capsule.Position = position;
-		var ball = capsule.GetBall();
-		ball.Color = color;
-		ball.CircleShape().Radius = radius;
+		capsule.Radius = radius;
 
 		AddChild(capsule);
 		capsules.Add(capsule.ID, capsule);

@@ -1,14 +1,13 @@
 [gd_scene load_steps=5 format=3 uid="uid://cepa8o1phs6uj"]
 
 [ext_resource type="Script" uid="uid://dphljli7basnr" path="res://src/things/GameInventorySlot.cs" id="1_b3cg4"]
-[ext_resource type="Texture2D" uid="uid://cjlst8ew5fsq2" path="res://assets/gui/token.png" id="2_22k64"]
+[ext_resource type="Texture2D" uid="uid://byjf8msjo3enp" path="res://assets/gui/ticket.png" id="2_b3cg4"]
 
 [sub_resource type="FontVariation" id="FontVariation_b3cg4"]
-spacing_top = -8
-spacing_bottom = -6
+spacing_top = -2
+spacing_bottom = -8
 
 [sub_resource type="FontVariation" id="FontVariation_22k64"]
-spacing_top = -5
 spacing_bottom = -5
 
 [node name="Slot" type="TextureRect" node_paths=PackedStringArray("shopOverlay", "priceLabel", "shopButton")]
@@ -45,18 +44,18 @@ unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
 
-[node name="Token" type="TextureRect" parent="ShopOverlay/CenterContainer/VBoxContainer/Container"]
+[node name="Ticket" type="TextureRect" parent="ShopOverlay/CenterContainer/VBoxContainer/Container"]
 unique_name_in_owner = true
 layout_mode = 2
-texture = ExtResource("2_22k64")
+texture = ExtResource("2_b3cg4")
 stretch_mode = 3
 
 [node name="Price" type="Label" parent="ShopOverlay/CenterContainer/VBoxContainer/Container"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_b3cg4")
-theme_override_font_sizes/font_size = 20
-text = "0"
+theme_override_font_sizes/font_size = 28
+text = "9"
 vertical_alignment = 1
 
 [node name="Button" type="Button" parent="ShopOverlay/CenterContainer/VBoxContainer"]

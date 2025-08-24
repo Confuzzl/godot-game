@@ -1,27 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://dclm46jr2fq8p"]
+[gd_scene load_steps=3 format=3 uid="uid://dclm46jr2fq8p"]
 
 [ext_resource type="Script" uid="uid://b4c0eq6yy5avm" path="res://src/machine/Capsule.cs" id="1_hdhng"]
-[ext_resource type="Script" uid="uid://dursjixd5w5i6" path="res://src/machine/Ball.cs" id="2_2iujb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hdhng"]
 radius = 20.0
 
-[node name="Capsule" type="RigidBody2D"]
+[node name="Capsule" type="RigidBody2D" node_paths=PackedStringArray("label")]
 script = ExtResource("1_hdhng")
+label = NodePath("Label")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 shape = SubResource("CircleShape2D_hdhng")
 debug_color = Color(0, 0.6, 0.701961, 1)
-script = ExtResource("2_2iujb")
 
-[node name="Label" type="Label" parent="Shape"]
+[node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
 offset_left = -30.0
 offset_top = -30.0
 offset_right = 30.0
 offset_bottom = 30.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 30
 text = "lala"
 horizontal_alignment = 1

@@ -18,57 +18,74 @@
 [ext_resource type="PackedScene" uid="uid://b0ld8ojgewjl1" path="res://scenes/Tooltip.tscn" id="16_8fbvn"]
 [ext_resource type="Script" uid="uid://b2vi8x1eo1t2y" path="res://src/TestButton.cs" id="17_ajyu1"]
 
-[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("TicketLabel", "TokenLabel", "RoundLabel", "Shop", "Stats", "Settings", "Characters", "Items", "Tooltip")]
+[node name="GUI" type="CanvasLayer" node_paths=PackedStringArray("TicketLabel", "TokenLabel", "RoundLabel", "ShopButton", "StatsButton", "SettingsButton", "Shop", "Stats", "Settings", "Characters", "Items", "Tooltip", "RoundPopup", "RoundPopupLabel")]
 process_mode = 3
 follow_viewport_enabled = true
 script = ExtResource("1_q7530")
-TicketLabel = NodePath("TicketBox/TicketCount")
-TokenLabel = NodePath("Screen/TokenCount")
-RoundLabel = NodePath("Screen/RoundCount")
-Shop = NodePath("Shop")
-Stats = NodePath("Stats")
-Settings = NodePath("Settings")
-Characters = NodePath("Characters")
-Items = NodePath("Items")
-Tooltip = NodePath("Tooltip")
+TicketLabel = NodePath("Main/TicketBox/CenterContainer/HBoxContainer/TicketCount")
+TokenLabel = NodePath("Main/Screen/TokenCount")
+RoundLabel = NodePath("Main/Screen/RoundCount")
+ShopButton = NodePath("Main/ShopButton")
+StatsButton = NodePath("Main/StatsButton")
+SettingsButton = NodePath("Main/SettingsButton")
+Shop = NodePath("Main/Shop")
+Stats = NodePath("Main/Stats")
+Settings = NodePath("Main/Settings")
+Characters = NodePath("Main/Characters")
+Items = NodePath("Main/Items")
+Tooltip = NodePath("Main/Tooltip")
+RoundPopup = NodePath("Main/RoundPopup")
+RoundPopupLabel = NodePath("Main/RoundPopup/PanelContainer/MarginContainer/Label")
 
-[node name="grid" type="TextureRect" parent="."]
+[node name="Main" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+
+[node name="grid" type="TextureRect" parent="Main"]
 visible = false
 texture_filter = 1
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 0
+offset_right = 960.0
+offset_bottom = 540.0
 texture = ExtResource("3_womn8")
 
-[node name="TicketBox" type="TextureRect" parent="."]
+[node name="TicketBox" type="TextureRect" parent="Main"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 810.0
 offset_right = 930.0
 offset_bottom = 60.0
 texture = ExtResource("4_cws7i")
 metadata/_edit_lock_ = true
 
-[node name="TicketCount" type="Label" parent="TicketBox"]
-unique_name_in_owner = true
+[node name="CenterContainer" type="CenterContainer" parent="Main/TicketBox"]
 layout_mode = 0
-offset_left = 43.0
-offset_top = 16.0
-offset_right = 96.0
-offset_bottom = 44.0
-theme_override_font_sizes/font_size = 20
-text = "999M"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 110.0
+offset_bottom = 50.0
 
-[node name="Ticket" type="TextureRect" parent="TicketBox"]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 20.0
-offset_right = 43.0
-offset_bottom = 40.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/TicketBox/CenterContainer"]
+layout_mode = 2
+
+[node name="Ticket" type="TextureRect" parent="Main/TicketBox/CenterContainer/HBoxContainer"]
+layout_mode = 2
 texture = ExtResource("5_u3xxf")
+stretch_mode = 3
 
-[node name="ScoreBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("MultiplierLabel", "ScoreLabel", "GoalLabel")]
+[node name="TicketCount" type="Label" parent="Main/TicketBox/CenterContainer/HBoxContainer"]
 unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "999"
+horizontal_alignment = 1
+
+[node name="ScoreBar" type="TextureProgressBar" parent="Main" node_paths=PackedStringArray("MultiplierLabel", "ScoreLabel", "GoalLabel")]
+unique_name_in_owner = true
+layout_mode = 0
 offset_left = 300.0
 offset_right = 660.0
 offset_bottom = 60.0
@@ -86,7 +103,7 @@ ScoreLabel = NodePath("RoundScore")
 GoalLabel = NodePath("GoalScore")
 metadata/_edit_lock_ = true
 
-[node name="RoundScore" type="Label" parent="ScoreBar"]
+[node name="RoundScore" type="Label" parent="Main/ScoreBar"]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 0
@@ -95,13 +112,13 @@ offset_top = 10.0
 offset_right = 180.0
 offset_bottom = 50.0
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 text = "999M"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="Sep" type="RichTextLabel" parent="ScoreBar"]
+[node name="Sep" type="RichTextLabel" parent="Main/ScoreBar"]
 layout_mode = 0
 offset_left = 170.0
 offset_top = 10.0
@@ -115,7 +132,7 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Multiplier" type="Label" parent="ScoreBar"]
+[node name="Multiplier" type="Label" parent="Main/ScoreBar"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 140.0
@@ -123,12 +140,12 @@ offset_top = 10.0
 offset_right = 220.0
 offset_bottom = 50.0
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 28
 text = "9999x"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GoalScore" type="Label" parent="ScoreBar"]
+[node name="GoalScore" type="Label" parent="Main/ScoreBar"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 180.0
@@ -136,20 +153,21 @@ offset_top = 10.0
 offset_right = 345.0
 offset_bottom = 50.0
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Screen" type="TextureRect" parent="."]
+[node name="Screen" type="TextureRect" parent="Main"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 660.0
 offset_right = 780.0
 offset_bottom = 60.0
 texture = ExtResource("4_cws7i")
 metadata/_edit_lock_ = true
 
-[node name="Token" type="TextureRect" parent="Screen"]
+[node name="Token" type="TextureRect" parent="Main/Screen"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 15.0
@@ -159,18 +177,18 @@ offset_bottom = 50.0
 texture = ExtResource("13_ajyu1")
 stretch_mode = 3
 
-[node name="TokenCount" type="Label" parent="Screen"]
+[node name="TokenCount" type="Label" parent="Main/Screen"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 35.0
 offset_top = 10.0
 offset_right = 60.0
 offset_bottom = 50.0
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 text = "5"
 vertical_alignment = 1
 
-[node name="Sep" type="RichTextLabel" parent="Screen"]
+[node name="Sep" type="RichTextLabel" parent="Main/Screen"]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 10.0
@@ -184,105 +202,152 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Round" type="Label" parent="Screen"]
+[node name="Round" type="Label" parent="Main/Screen"]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 10.0
 offset_right = 110.0
 offset_bottom = 30.0
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 14
 text = "Round"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="RoundCount" type="Label" parent="Screen"]
+[node name="RoundCount" type="Label" parent="Main/Screen"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 60.0
-offset_top = 23.0
+offset_top = 22.0
 offset_right = 110.0
-offset_bottom = 51.0
-theme_override_font_sizes/font_size = 20
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 28
 text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="Main"]
+layout_mode = 0
 offset_left = 91.0
 offset_top = 58.0
 offset_right = 215.0
 offset_bottom = 81.0
 text = "alalalalalalalalal"
 
-[node name="ShopButton" type="Button" parent="."]
+[node name="ShopButton" type="Button" parent="Main"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 840.0
 offset_top = 120.0
 offset_right = 900.0
 offset_bottom = 180.0
 focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 28
 toggle_mode = true
 text = "Shop"
 metadata/_edit_lock_ = true
 
-[node name="StatsButton" type="Button" parent="."]
+[node name="StatsButton" type="Button" parent="Main"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 840.0
 offset_top = 240.0
 offset_right = 900.0
 offset_bottom = 300.0
 focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 28
 toggle_mode = true
-text = "Stats"
+text = "Stat"
 metadata/_edit_lock_ = true
 
-[node name="SettingsButton" type="Button" parent="."]
+[node name="SettingsButton" type="Button" parent="Main"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 840.0
 offset_top = 360.0
 offset_right = 900.0
 offset_bottom = 420.0
 focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 28
 toggle_mode = true
 text = "Set"
 metadata/_edit_lock_ = true
 
-[node name="Shop" parent="." instance=ExtResource("14_8fbvn")]
+[node name="Shop" parent="Main" instance=ExtResource("14_8fbvn")]
+unique_name_in_owner = true
+visible = false
+offset_left = 0.0
+offset_right = 960.0
+
+[node name="Stats" parent="Main" instance=ExtResource("15_ajyu1")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Stats" parent="." instance=ExtResource("15_ajyu1")]
+[node name="Settings" parent="Main" instance=ExtResource("13_vjrnn")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Settings" parent="." instance=ExtResource("13_vjrnn")]
-unique_name_in_owner = true
+[node name="RoundPopup" type="HBoxContainer" parent="Main"]
 visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -28.0
+offset_right = 85.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Characters" parent="." instance=ExtResource("6_u3xxf")]
+[node name="PanelContainer" type="PanelContainer" parent="Main/RoundPopup"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Main/RoundPopup/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="Main/RoundPopup/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Round 1"
+
+[node name="Characters" parent="Main" instance=ExtResource("6_u3xxf")]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 60.0
 offset_top = 120.0
 offset_right = 240.0
 offset_bottom = 240.0
 script = ExtResource("7_cekc3")
 
-[node name="Items" parent="." instance=ExtResource("6_u3xxf")]
+[node name="Items" parent="Main" instance=ExtResource("6_u3xxf")]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 60.0
 offset_top = 300.0
 offset_right = 240.0
 offset_bottom = 420.0
 script = ExtResource("8_1i4pd")
 
-[node name="Tooltip" parent="." instance=ExtResource("16_8fbvn")]
+[node name="Tooltip" parent="Main" instance=ExtResource("16_8fbvn")]
 unique_name_in_owner = true
 visible = false
+layout_mode = 0
+offset_bottom = 48.0
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="Main"]
 visible = false
+layout_mode = 0
 offset_left = 422.0
 offset_top = 159.0
 offset_right = 503.0

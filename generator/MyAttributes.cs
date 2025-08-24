@@ -4,7 +4,9 @@ namespace Matcha.Generator.Attributes
 {
     namespace Thing
     {
-        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class BaseType : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Base : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class CharacterBase : Attribute { }
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class ItemBase : Attribute { }
 
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class ResourceName(string _) : Attribute { }
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)] public class Price(uint _) : Attribute { }
